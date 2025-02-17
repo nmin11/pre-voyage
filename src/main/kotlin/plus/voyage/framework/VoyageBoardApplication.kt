@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class FrameworkApplication
+class VoyageBoardApplication
 
 fun main(args: Array<String>) {
-	runApplication<FrameworkApplication>(*args)
+	runApplication<VoyageBoardApplication>(*args)
 }
