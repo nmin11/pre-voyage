@@ -25,7 +25,7 @@
 
 ### API Specification
 
-[GitBook API 명세서](https://nmin1124.gitbook.io/pre-voyage)
+<a href="https://nmin1124.gitbook.io/pre-voyage" target="_blank">API 명세서 (by GitBook)</a>
 
 TODO: ERD 첨부
 
