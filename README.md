@@ -23,7 +23,11 @@
 
 <img src="docs/usecase.drawio.svg">
 
-TODO: API 명세서, ERD 첨부
+### API Specification
+
+[GitBook API 명세서](https://nmin1124.gitbook.io/pre-voyage)
+
+TODO: ERD 첨부
 
 ## Milestones
 
