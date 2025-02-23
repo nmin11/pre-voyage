@@ -6,16 +6,16 @@
 
 ## Goals
 
-- Usecase Diagram 작성
-- API 명세서 작성
-- ERD 작성
-- 게시글 CRUD API 구현
-- 회원가입 API 구현
-- 로그인 API 구현
-- Admin의 회원 권한 부여 기능 구현
-- 댓글 CRUD API 구현
-- Thymeleaf를 활용해서 기본적인 UI 구현
-- 커피 주문 시스템 관련 API 구현
+- [x] Usecase Diagram 작성
+- [x] API 명세서 작성
+- [x] ERD 작성
+- [ ] 게시글 CRUD API 구현
+- [ ] 회원가입 API 구현
+- [ ] 로그인 API 구현
+- [ ] Admin의 회원 권한 부여 기능 구현
+- [ ] 댓글 CRUD API 구현
+- [ ] Thymeleaf를 활용해서 기본적인 UI 구현
+- [ ] 커피 주문 시스템 관련 API 구현
 
 ## Plan
 
@@ -23,11 +23,13 @@
 
 <img src="docs/usecase.drawio.svg">
 
+### ERD
+
+<img src="docs/erd.dbdiagramio.svg">
+
 ### API Specification
 
 <a href="https://nmin1124.gitbook.io/pre-voyage" target="_blank">API 명세서 (by GitBook)</a>
-
-TODO: ERD 첨부
 
 ## Milestones
 
