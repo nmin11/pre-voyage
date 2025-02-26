@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <title>Pre Voyage - Login</title>
+</head>
+<body>
+<h1>로그인</h1>
+<form th:action="@{/users/login}" th:object="" method="post">
+  <div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required />
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required />
+  </div>
+  <br/>
+  <div>
+    <button type="submit">로그인</button>
+    <a th:href="@{/register}" style="margin-left: 10px;">회원가입</a>
+  </div>
+  <div>
+    <p th:if="${param.error}">로그인에 실패했습니다.</p>
+    <p th:if="${param.logout}">로그아웃 되었습니다.</p>
+  </div>
+</form>
+</body>
+</html>
