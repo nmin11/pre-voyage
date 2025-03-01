@@ -13,7 +13,11 @@ class Board(
     var title: String,
 
     @Column(nullable = false)
-    var content: String
+    var content: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var user: User
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

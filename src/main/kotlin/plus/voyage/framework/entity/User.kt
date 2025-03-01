@@ -18,6 +18,9 @@ class User(
 
     @Enumerated(EnumType.STRING)
     var role: Role = Role.USER
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    var boards: MutableList<Board> = mutableListOf()
 }
 
 enum class Role {

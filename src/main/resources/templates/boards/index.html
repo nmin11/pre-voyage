@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <title>Pre Voyage - Boards</title>
+</head>
+<body>
+<h1>게시판</h1>
+<table>
+  <thead>
+  <tr>
+    <th>게시글 ID</th>
+    <th>제목</th>
+    <th>작성자</th>
+    <th>내용</th>
+    <th>작성일</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${boards == #lists.isEmpty(boards)}">
+    <td colspan="5" style="text-align: center;">게시글이 없습니다.</td>
+  </tr>
+
+  <tr th:each="board : ${boards.boards}">
+    <td th:text="${board.boardId}"></td>
+    <td th:text="${board.title}"></td>
+    <td th:text="${board.username}"></td>
+    <td th:text="${board.content}"></td>
+    <td th:text="${board.createdAt}"></td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
