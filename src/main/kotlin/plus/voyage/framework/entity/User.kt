@@ -4,17 +4,17 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "\"user\"")
-class User(username: String, password: String) {
+class User(
+    @Column(unique = true, nullable = false)
+    var username: String,
+
+    @Column(nullable = false)
+    var password: String
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     var id: Int? = null
-
-    @Column(unique = true, nullable = false)
-    var username: String = username
-
-    @Column(nullable = false)
-    var password: String = password
 
     @Enumerated(EnumType.STRING)
     var role: Role = Role.USER

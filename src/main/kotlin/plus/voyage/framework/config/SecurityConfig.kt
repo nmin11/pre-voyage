@@ -60,7 +60,6 @@ class SecurityConfig(
             }
             .headers { header -> header.frameOptions { frame -> frame.sameOrigin() } }
             .httpBasic(Customizer.withDefaults())
-            .formLogin(Customizer.withDefaults())
             .oauth2ResourceServer { it.jwt {  } }
             .exceptionHandling {
                 it.authenticationEntryPoint(BearerTokenAuthenticationEntryPoint())
