@@ -19,12 +19,15 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler
 import org.springframework.security.web.SecurityFilterChain
+import plus.voyage.framework.repository.UserRepository
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    val userRepository: UserRepository
+) {
     @Value("\${jwt.public.key}")
     lateinit var publicKey: RSAPublicKey
 
@@ -43,7 +46,17 @@ class SecurityConfig {
                 ).permitAll()
                 it.requestMatchers("/h2-console/**").permitAll()
                 it.requestMatchers("/admin/**").hasRole("ADMIN")
-                it.anyRequest().authenticated()
+                it.anyRequest().permitAll()
+            }
+            .formLogin {
+                it.loginPage("/login")
+                it.loginProcessingUrl("/users/login")
+                it.defaultSuccessUrl("/boards")
+                it.failureUrl("/login?error=true")
+            }
+            .logout {
+                it.logoutUrl("/logout")
+                it.logoutSuccessUrl("/login?logout=true")
             }
             .headers { header -> header.frameOptions { frame -> frame.sameOrigin() } }
             .httpBasic(Customizer.withDefaults())

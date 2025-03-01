@@ -1,7 +1,6 @@
 package plus.voyage.framework.controller
 
 import org.springframework.stereotype.Controller
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,16 +13,8 @@ class UserController(
     private val userService: UserService
 ) {
     @PostMapping("/signup")
-    fun signup(
-        @ModelAttribute request: SignupRequest,
-        bindingResult: BindingResult
-    ): String {
-        if (bindingResult.hasErrors()) {
-            return "register"
-        }
-
+    fun signup(@ModelAttribute request: SignupRequest): String {
          userService.signup(request)
-
-        return "redirect:/boards"
+        return "redirect:/login"
     }
 }
