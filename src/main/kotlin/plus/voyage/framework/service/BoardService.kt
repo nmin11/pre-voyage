@@ -83,4 +83,9 @@ class BoardService(
             isAuthor = true
         )
     }
+
+    @Transactional
+    fun delete(boardId: Int) {
+        boardRepository.deleteById(boardId)
+    }
 }

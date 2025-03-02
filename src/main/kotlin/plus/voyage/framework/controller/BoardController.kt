@@ -2,6 +2,7 @@ package plus.voyage.framework.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
@@ -46,5 +47,11 @@ class BoardController(
         val board = boardService.update(id, request)
         model.addAttribute("board", board)
         return "boards/detail"
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Int): String {
+        boardService.delete(id)
+        return "redirect:/boards"
     }
 }

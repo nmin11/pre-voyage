@@ -13,7 +13,20 @@
 
 <br>
 
-<a th:if="${board.isAuthor}" th:href="@{/boards/update/{id}(id=${board.boardId})}">수정하기</a>
+<th:block th:if="${board.isAuthor}">
+  <a th:href="@{/boards/{id}/edit(id=${board.boardId})}">
+    <button>수정하기</button>
+  </a>
+
+  <form th:action="@{/boards/{id}(id=${board.boardId})}" method="post"
+        onsubmit="return confirm('정말 삭제하시겠습니까?');">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit" style="color: red;">삭제하기</button>
+  </form>
+</th:block>
+
+<br>
+
 <a href="/boards">목록으로</a>
 </body>
 </html>
