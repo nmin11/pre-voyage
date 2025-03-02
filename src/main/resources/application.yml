@@ -13,6 +13,10 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     cache: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
 jwt:
   private.key: classpath:app.key

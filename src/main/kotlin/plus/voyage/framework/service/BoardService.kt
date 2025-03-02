@@ -1,21 +1,22 @@
 package plus.voyage.framework.service
 
+import jakarta.transaction.Transactional
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import plus.voyage.framework.dto.BoardCreateRequest
-import plus.voyage.framework.dto.BoardDetailResponse
-import plus.voyage.framework.dto.BoardListResponse
-import plus.voyage.framework.dto.BoardResponse
+import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Board
 import plus.voyage.framework.entity.User
 import plus.voyage.framework.repository.BoardRepository
 import plus.voyage.framework.repository.UserRepository
+import java.time.LocalDateTime
 
 @Service
 class BoardService(
     private val boardRepository: BoardRepository,
     private val userRepository: UserRepository
 ) {
+    @Transactional
     fun create(request: BoardCreateRequest) {
         val username = SecurityContextHolder.getContext().authentication.name
         val user: User = userRepository.findByUsername(username)
@@ -54,6 +55,32 @@ class BoardService(
             createdAt = board.createdAt,
             updatedAt = board.updatedAt,
             isAuthor
+        )
+    }
+
+    @Transactional
+    fun update(boardId: Int, request: BoardUpdateRequest): BoardDetailResponse {
+        val username = SecurityContextHolder.getContext().authentication.name
+        val board: Board = boardRepository.findById(boardId).orElseThrow {
+            throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
+        }
+        val isAuthor = username == board.user.username
+        if (!isAuthor) {
+            throw AccessDeniedException("게시글 수정 권한이 없습니다.")
+        }
+
+        board.title = request.title
+        board.content = request.content
+        board.updatedAt = LocalDateTime.now()
+
+        return BoardDetailResponse(
+            boardId,
+            username = board.user.username,
+            title = board.title,
+            content = board.content,
+            createdAt = board.createdAt,
+            updatedAt = board.updatedAt,
+            isAuthor = true
         )
     }
 }

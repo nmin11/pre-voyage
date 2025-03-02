@@ -13,6 +13,7 @@
 
 <br>
 
+<a th:if="${board.isAuthor}" th:href="@{/boards/update/{id}(id=${board.boardId})}">수정하기</a>
 <a href="/boards">목록으로</a>
 </body>
 </html>

@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.BoardCreateRequest
+import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.service.BoardService
 
 @Controller
@@ -31,6 +33,17 @@ class BoardController(
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Int, model: Model): String {
         val board = boardService.getById(id)
+        model.addAttribute("board", board)
+        return "boards/detail"
+    }
+
+    @PutMapping("/{id}")
+    fun update(
+        @PathVariable id: Int,
+        @ModelAttribute request: BoardUpdateRequest,
+        model: Model
+    ): String {
+        val board = boardService.update(id, request)
         model.addAttribute("board", board)
         return "boards/detail"
     }
