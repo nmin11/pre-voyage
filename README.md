@@ -9,9 +9,9 @@
 - [x] Usecase Diagram 작성
 - [x] API 명세서 작성
 - [x] ERD 작성
-- [ ] 게시글 CRUD API 구현
-- [ ] 회원가입 API 구현
-- [ ] 로그인 API 구현
+- [x] 게시글 CRUD API 구현
+- [x] 회원가입 API 구현
+- [x] 로그인 API 구현
 - [ ] Admin의 회원 권한 부여 기능 구현
 - [ ] 댓글 CRUD API 구현
 - [ ] Thymeleaf를 활용해서 기본적인 UI 구현
