@@ -14,7 +14,7 @@ class UserController(
 ) {
     @PostMapping("/signup")
     fun signup(@ModelAttribute request: SignupRequest): String {
-         userService.signup(request)
+        userService.signup(request)
         return "redirect:/login"
     }
 }
