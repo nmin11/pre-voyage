@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.BoardCreateRequest
@@ -25,5 +26,12 @@ class BoardController(
         val boardListResponse = boardService.getAll()
         model.addAttribute("boards", boardListResponse)
         return "boards/index"
+    }
+
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Int, model: Model): String {
+        val board = boardService.getById(id)
+        model.addAttribute("board", board)
+        return "boards/detail"
     }
 }

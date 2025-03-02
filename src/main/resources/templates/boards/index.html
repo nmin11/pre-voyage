@@ -8,8 +8,7 @@
 <table>
   <thead>
   <tr>
-    <th>게시글 ID</th>
-    <th>제목</th>
+    <th>제목</th> 
     <th>작성자</th>
     <th>내용</th>
     <th>작성일</th>
@@ -21,8 +20,9 @@
   </tr>
 
   <tr th:each="board : ${boards.boards}">
-    <td th:text="${board.boardId}"></td>
-    <td th:text="${board.title}"></td>
+    <td>
+      <a th:href="@{/boards/{id}(id=${board.boardId})}" th:text="${board.title}"></a>
+    </td>
     <td th:text="${board.username}"></td>
     <td th:text="${board.content}"></td>
     <td th:text="${board.createdAt}"></td>

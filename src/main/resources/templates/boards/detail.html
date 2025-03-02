@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <title>Pre Voyage - Board Detail</title>
+</head>
+<body>
+<h1 th:text="${board.title}">게시글 제목</h1>
+<p><strong>작성자:</strong> <span th:text="${board.username}"></span></p>
+<p><strong>내용:</strong></p>
+<p th:text="${board.content}"></p>
+<p><strong>작성일:</strong> <span th:text="${board.createdAt}"></span></p>
+<p><strong>수정일:</strong> <span th:text="${board.updatedAt}"></span></p>
+
+<br>
+
+<a href="/boards">목록으로</a>
+</body>
+</html>
