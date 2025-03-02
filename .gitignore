@@ -42,3 +42,6 @@ out/
 ### Secret Keys ###
 app.key
 app.pub
+
+### Database ###
+*.db

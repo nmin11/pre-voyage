@@ -44,7 +44,6 @@ class SecurityConfig(
                     "/users/login",
                     "/users/signup"
                 ).permitAll()
-                it.requestMatchers("/h2-console/**").permitAll()
                 it.requestMatchers("/admin/**").hasRole("ADMIN")
                 it.anyRequest().permitAll()
             }
