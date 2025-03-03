@@ -7,7 +7,7 @@ import plus.voyage.framework.entity.User
 class PrincipalDetails(private var user: User) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val collection: MutableCollection<GrantedAuthority> = ArrayList()
-        collection.add(GrantedAuthority { user.role.name })
+        collection.add(GrantedAuthority { user.role.roleName })
         return collection
     }
 

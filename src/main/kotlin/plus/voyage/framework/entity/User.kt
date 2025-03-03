@@ -23,7 +23,7 @@ class User(
     var boards: MutableList<Board> = mutableListOf()
 }
 
-enum class Role {
-    USER,
-    ADMIN
+enum class Role(val roleName: String) {
+    USER("ROLE_USER"),
+    ADMIN("ROLE_ADMIN")
 }

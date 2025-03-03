@@ -8,9 +8,11 @@ import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.service.BoardService
+import plus.voyage.framework.service.UserService
 
 @Controller
 class WebController(
+    private val userService: UserService,
     private val boardService: BoardService
 ) {
     @GetMapping("/login")
@@ -42,5 +44,12 @@ class WebController(
             BoardUpdateRequest(board.title, board.content)
         )
         return "boards/update"
+    }
+
+    @GetMapping("/admin")
+    fun adminPageWithUserList(model: Model): String {
+        val users = userService.getAll()
+        model.addAttribute("users", users)
+        return "admin/index"
     }
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ko">
+<nav class="navbar" th:fragment="navbar">
+  <div class="navbar-container">
+
+    <div class="navbar-title">
+      <a href="/">⚓️ Pre Voyage</a>
+    </div>
+
+    <div class="navbar-links">
+      <span class="navbar-user">
+        <strong sec:authentication="name"></strong>
+      </span>
+
+      <a sec:authorize="hasRole('ADMIN')" href="/admin" class="navbar-link">
+        Admin 페이지
+      </a>
+
+      <a href="/logout" class="navbar-link">로그아웃</a>
+    </div>
+  </div>
+</nav>
