@@ -8,12 +8,13 @@ import java.time.LocalDateTime
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Board(
-    @Column(nullable = false)
-    var title: String,
-
+class Comment(
     @Column(nullable = false)
     var content: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    var board: Board,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -21,7 +22,7 @@ class Board(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "boardId")
+    @Column(name = "commentId")
     var id: Int? = null
 
     @CreatedDate
@@ -30,7 +31,4 @@ class Board(
 
     @LastModifiedDate
     var updatedAt: LocalDateTime = LocalDateTime.now()
-
-    @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
-    var comments: MutableList<Comment> = mutableListOf()
 }

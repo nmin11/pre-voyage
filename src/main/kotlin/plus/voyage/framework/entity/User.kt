@@ -21,6 +21,9 @@ class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     var boards: MutableList<Board> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    var comments: MutableList<Comment> = mutableListOf()
 }
 
 enum class Role(val roleName: String) {

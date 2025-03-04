@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.service.BoardService
+import plus.voyage.framework.service.CommentService
 
 @Controller
 @RequestMapping("/boards")
 class BoardController(
-    private val boardService: BoardService
+    private val boardService: BoardService,
+    private val commentService: CommentService
 ) {
     @PostMapping
     fun create(@ModelAttribute request: BoardCreateRequest): String {
@@ -53,5 +55,14 @@ class BoardController(
     fun delete(@PathVariable id: Int): String {
         boardService.delete(id)
         return "redirect:/boards"
+    }
+
+    @PostMapping("/{id}/comments")
+    fun createComment(
+        @PathVariable id: Int,
+        content: String
+    ): String {
+        commentService.create(id, content)
+        return "redirect:/boards/{id}"
     }
 }

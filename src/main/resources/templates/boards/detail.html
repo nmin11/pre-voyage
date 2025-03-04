@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
   <title>Pre Voyage - Board Detail</title>
 </head>
 <body>
@@ -29,6 +29,34 @@
     <button type="submit" style="color: red;">삭제하기</button>
   </form>
 </th:block>
+
+<br>
+
+<h3>댓글 작성</h3>
+<form th:action="@{/boards/{id}/comments(id=${board.boardId})}" method="post">
+  <input type="hidden" name="boardId" th:value="${board.boardId}">
+  <label>
+    <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+  </label>
+  <br>
+  <button type="submit">댓글 작성</button>
+</form>
+
+<br>
+
+<h3>댓글</h3>
+<div th:if="${not #lists.isEmpty(comments)}">
+  <ul>
+    <li th:each="comment : ${comments}">
+      <strong th:text="${comment.username}"></strong>:
+      <span th:text="${comment.content}"></span>
+      <em th:text="${comment.createdAt}"></em>
+    </li>
+  </ul>
+</div>
+<div th:if="${#lists.isEmpty(comments)}">
+  <p>아직 댓글이 없습니다.</p>
+</div>
 
 <br>
 
