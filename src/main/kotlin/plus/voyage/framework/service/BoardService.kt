@@ -46,13 +46,14 @@ class BoardService(
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
-        val isAuthor = username == board.user.username
         val comments = board.comments.map {
             CommentListResponse(
+                commentId = it.id ?: throw IllegalStateException("존재하지 않는 댓글입니다."),
                 username = it.user.username,
                 content = it.content,
                 createdAt = it.createdAt,
-                updatedAt = it.updatedAt
+                updatedAt = it.updatedAt,
+                isAuthor = username == it.user.username
             )
         }
 
@@ -63,7 +64,7 @@ class BoardService(
             content = board.content,
             createdAt = board.createdAt,
             updatedAt = board.updatedAt,
-            isAuthor,
+            isAuthor = username == board.user.username,
             comments
         )
     }
@@ -74,8 +75,7 @@ class BoardService(
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
-        val isAuthor = username == board.user.username
-        if (!isAuthor) {
+        if (username != board.user.username) {
             throw AccessDeniedException("게시글 수정 권한이 없습니다.")
         }
 

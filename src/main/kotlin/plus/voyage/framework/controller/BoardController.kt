@@ -63,4 +63,14 @@ class BoardController(
         commentService.create(id, content)
         return "redirect:/boards/$id"
     }
+
+    @PutMapping("/{boardId}/comments/{commentId}")
+    fun updateComment(
+        @PathVariable boardId: Int,
+        @PathVariable commentId: Int,
+        content: String
+    ): String {
+        commentService.update(boardId, commentId, content)
+        return "redirect:/boards/$boardId"
+    }
 }

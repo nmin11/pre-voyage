@@ -1,6 +1,7 @@
 package plus.voyage.framework.service
 
 import jakarta.transaction.Transactional
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.entity.Board
@@ -9,6 +10,7 @@ import plus.voyage.framework.entity.User
 import plus.voyage.framework.repository.BoardRepository
 import plus.voyage.framework.repository.CommentRepository
 import plus.voyage.framework.repository.UserRepository
+import java.time.LocalDateTime
 
 @Service
 class CommentService(
@@ -28,5 +30,25 @@ class CommentService(
         val comment = Comment(content, board, user)
 
         commentRepository.save(comment)
+    }
+
+    @Transactional
+    fun update(boardId: Int, commentId: Int, content: String) {
+        val username = SecurityContextHolder.getContext().authentication.name
+        val comment: Comment = commentRepository.findById(commentId).orElseThrow {
+            throw NoSuchElementException("$commentId 번 댓글을 찾을 수 없습니다.")
+        }
+        if (username != comment.user.username) {
+            throw AccessDeniedException("댓글 수정 권한이 없습니다.")
+        }
+        val board: Board = boardRepository.findById(boardId).orElseThrow {
+            throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
+        }
+        if (comment.board != board) {
+            throw IllegalArgumentException("게시글과 댓글의 ID 가 일치하지 않습니다.")
+        }
+
+        comment.content = content
+        comment.updatedAt = LocalDateTime.now()
     }
 }
