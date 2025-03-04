@@ -73,4 +73,13 @@ class BoardController(
         commentService.update(boardId, commentId, content)
         return "redirect:/boards/$boardId"
     }
+
+    @DeleteMapping("/{boardId}/comments/{commentId}")
+    fun deleteComment(
+        @PathVariable boardId: Int,
+        @PathVariable commentId: Int
+    ): String {
+        commentService.delete(commentId)
+        return "redirect:/boards/$boardId"
+    }
 }

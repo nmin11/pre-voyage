@@ -50,20 +50,30 @@
     <li th:each="comment : ${board.comments}">
       <strong th:text="${comment.username}"></strong>:
       <span th:text="${comment.content}"></span>
-      <button th:if="${comment.isAuthor}" th:attr="onclick='editComment(' + ${comment.commentId} + ')'">수정</button>
 
-      <form th:id="'comment-form-' + ${comment.commentId}"
-            th:action="@{/boards/{boardId}/comments/{commentId}(boardId=${board.boardId}, commentId=${comment.commentId})}"
-            method="post"
-            style="display: none;"
-            onsubmit="return confirm('댓글을 수정하시겠습니까?');">
-        <input type="hidden" name="_method" value="put">
-        <label>
-          <textarea th:id="'comment-text-' + ${comment.commentId}" name="content" th:text="${comment.content}"></textarea>
-        </label>
-        <button type="submit">저장</button>
-        <button type="button" th:attr="onclick='cancelEdit(' + ${comment.commentId} + ')'">취소</button>
-      </form>
+      <th:block th:if="${comment.isAuthor}">
+        <button th:attr="onclick='editComment(' + ${comment.commentId} + ')'">수정</button>
+
+        <form th:id="'comment-form-' + ${comment.commentId}"
+              th:action="@{/boards/{boardId}/comments/{commentId}(boardId=${board.boardId}, commentId=${comment.commentId})}"
+              method="post"
+              style="display: none;"
+              onsubmit="return confirm('댓글을 수정하시겠습니까?');">
+          <input type="hidden" name="_method" value="put">
+          <label>
+            <textarea th:id="'comment-text-' + ${comment.commentId}" name="content" th:text="${comment.content}"></textarea>
+          </label>
+          <button type="submit">저장</button>
+          <button type="button" th:attr="onclick='cancelEdit(' + ${comment.commentId} + ')'">취소</button>
+        </form>
+
+        <form th:action="@{/boards/{boardId}/comments/{commentId}(boardId=${board.boardId}, commentId=${comment.commentId})}"
+              method="post"
+              onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit" style="color: red;">삭제</button>
+        </form>
+      </th:block>
     </li>
   </ul>
 </div>

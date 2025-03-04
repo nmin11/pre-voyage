@@ -51,4 +51,9 @@ class CommentService(
         comment.content = content
         comment.updatedAt = LocalDateTime.now()
     }
+
+    @Transactional
+    fun delete(commentId: Int) {
+        commentRepository.deleteById(commentId)
+    }
 }
