@@ -45,16 +45,15 @@
 <br>
 
 <h3>댓글</h3>
-<div th:if="${not #lists.isEmpty(comments)}">
+<div th:if="${not #lists.isEmpty(board.comments)}">
   <ul>
-    <li th:each="comment : ${comments}">
+    <li th:each="comment : ${board.comments}">
       <strong th:text="${comment.username}"></strong>:
       <span th:text="${comment.content}"></span>
-      <em th:text="${comment.createdAt}"></em>
     </li>
   </ul>
 </div>
-<div th:if="${#lists.isEmpty(comments)}">
+<div th:if="${#lists.isEmpty(board.comments)}">
   <p>아직 댓글이 없습니다.</p>
 </div>
 

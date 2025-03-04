@@ -43,12 +43,10 @@ class BoardController(
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Int,
-        @ModelAttribute request: BoardUpdateRequest,
-        model: Model
+        @ModelAttribute request: BoardUpdateRequest
     ): String {
-        val board = boardService.update(id, request)
-        model.addAttribute("board", board)
-        return "boards/detail"
+        boardService.update(id, request)
+        return "redirect:/boards/$id"
     }
 
     @DeleteMapping("/{id}")
@@ -63,6 +61,6 @@ class BoardController(
         content: String
     ): String {
         commentService.create(id, content)
-        return "redirect:/boards/{id}"
+        return "redirect:/boards/$id"
     }
 }

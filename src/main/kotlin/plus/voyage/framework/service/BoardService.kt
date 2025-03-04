@@ -47,6 +47,14 @@ class BoardService(
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
         val isAuthor = username == board.user.username
+        val comments = board.comments.map {
+            CommentListResponse(
+                username = it.user.username,
+                content = it.content,
+                createdAt = it.createdAt,
+                updatedAt = it.updatedAt
+            )
+        }
 
         return BoardDetailResponse(
             boardId,
@@ -55,12 +63,13 @@ class BoardService(
             content = board.content,
             createdAt = board.createdAt,
             updatedAt = board.updatedAt,
-            isAuthor
+            isAuthor,
+            comments
         )
     }
 
     @Transactional
-    fun update(boardId: Int, request: BoardUpdateRequest): BoardDetailResponse {
+    fun update(boardId: Int, request: BoardUpdateRequest) {
         val username = SecurityContextHolder.getContext().authentication.name
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
@@ -73,16 +82,6 @@ class BoardService(
         board.title = request.title
         board.content = request.content
         board.updatedAt = LocalDateTime.now()
-
-        return BoardDetailResponse(
-            boardId,
-            username = board.user.username,
-            title = board.title,
-            content = board.content,
-            createdAt = board.createdAt,
-            updatedAt = board.updatedAt,
-            isAuthor = true
-        )
     }
 
     @Transactional

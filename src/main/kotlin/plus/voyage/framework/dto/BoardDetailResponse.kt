@@ -9,5 +9,6 @@ data class BoardDetailResponse(
     val content: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val isAuthor: Boolean
+    val isAuthor: Boolean,
+    val comments: List<CommentListResponse>
 )
