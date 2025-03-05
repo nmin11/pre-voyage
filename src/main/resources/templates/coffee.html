@@ -18,6 +18,10 @@
     <img th:src="${coffee.imageUrl}" alt="커피 이미지">
     <h3 th:text="${coffee.name}"></h3>
     <p>Points: <span th:text="${coffee.price}"></span>원</p>
+
+    <form th:action="@{/coffee/{id}/order(id=${coffee.id})}" method="post">
+      <button type="submit" onclick="return confirm('이 커피를 주문하시겠습니까?');">주문하기</button>
+    </form>
   </div>
 </div>
 

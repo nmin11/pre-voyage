@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.CoffeeCreateRequest
@@ -25,5 +26,11 @@ class CoffeeController(
         val coffeeListResponse = coffeeService.getAll()
         model.addAttribute("coffeeList", coffeeListResponse)
         return "coffee"
+    }
+
+    @PostMapping("/{id}/order")
+    fun orderCoffee(@PathVariable id: Int): String {
+        coffeeService.orderCoffee(id)
+        return "redirect:/coffee"
     }
 }

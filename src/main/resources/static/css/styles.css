@@ -48,19 +48,45 @@ table, td {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
+    justify-content: center; /* 카드 중앙 정렬 */
+    padding: 20px;
 }
 
 .coffee-card {
     border: 1px solid #ddd;
     padding: 12px;
-    width: 200px;
+    min-width: 150px;
+    max-width: 240px;
     text-align: center;
     border-radius: 8px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.coffee-card:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .coffee-card img {
     max-width: 100%;
     height: auto;
     border-radius: 4px;
+}
+
+.coffee-card button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 8px;
+    transition: background-color 0.2s;
+}
+
+.coffee-card button:hover {
+    background-color: #0056b3;
 }

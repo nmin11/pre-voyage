@@ -17,4 +17,7 @@ class Coffee(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "coffeeId")
     var id: Int? = null
+
+    @OneToMany(mappedBy = "coffee", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    var orders: MutableList<Order> = mutableListOf()
 }
