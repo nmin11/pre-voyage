@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.CoffeeCreateRequest
+import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.service.CoffeeService
 
 @Controller
@@ -25,7 +26,14 @@ class CoffeeController(
     fun getAll(model: Model): String {
         val coffeeListResponse = coffeeService.getAll()
         model.addAttribute("coffeeList", coffeeListResponse)
-        return "coffee"
+        return "coffee/index"
+    }
+
+    @GetMapping("/weekly-popular")
+    fun getWeeklyPopularCoffee(model: Model): String {
+        val coffeeList = coffeeService.getWeeklyPopularCoffee()
+        model.addAttribute("coffeeList", coffeeList)
+        return "coffee/weekly-popular"
     }
 
     @PostMapping("/{id}/order")

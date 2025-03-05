@@ -1,6 +1,7 @@
 package plus.voyage.framework.service
 
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.CoffeeCreateRequest
@@ -11,6 +12,7 @@ import plus.voyage.framework.entity.User
 import plus.voyage.framework.repository.CoffeeRepository
 import plus.voyage.framework.repository.OrderRepository
 import plus.voyage.framework.repository.UserRepository
+import java.time.LocalDateTime
 
 @Service
 class CoffeeService(
@@ -36,6 +38,11 @@ class CoffeeService(
             totalCounts = coffeeList.size,
             coffeeList
         )
+    }
+
+    fun getWeeklyPopularCoffee(): List<Coffee> {
+        val targetDay = LocalDateTime.now().minusDays(7)
+        return orderRepository.findPopularCoffeeSince(targetDay, PageRequest.of(0, 3))
     }
 
     @Transactional

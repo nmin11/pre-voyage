@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <title>Pre Voyage - Weekly Popular Coffees</title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2>주간 TOP 3 커피</h2>
+
+<div class="coffee-container">
+  <div class="coffee-card" th:each="coffee : ${coffeeList}">
+    <img th:src="${coffee.imageUrl}" alt="커피 이미지">
+    <h3 th:text="${coffee.name}"></h3>
+    <p>Points: <span th:text="${coffee.price}"></span>원</p>
+
+    <form th:action="@{/coffee/{id}/order(id=${coffee.id})}" method="post">
+      <button type="submit" onclick="return confirm('이 커피를 주문하시겠습니까?');">주문하기</button>
+    </form>
+  </div>
+</div>
+
+<a href="/coffee/weekly-popular">전체 커피 메뉴</a>
+
+</body>
+</html>
