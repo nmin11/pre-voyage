@@ -18,6 +18,8 @@
     <th>ID</th>
     <th>Username</th>
     <th>Role</th>
+    <th>Points</th>
+    <th>Point Charge</th>
   </tr>
   </thead>
   <tbody>
@@ -35,6 +37,15 @@
           </select>
         </label>
         <button type="submit">저장</button>
+      </form>
+    </td>
+    <td th:text="${user.points}"></td>
+    <td>
+      <form th:action="@{/users/{id}/points(id=${user.id})}" method="post">
+        <label>
+          <input type="number" name="points" min="1" required>
+        </label>
+        <button type="submit">충전</button>
       </form>
     </td>
   </tr>

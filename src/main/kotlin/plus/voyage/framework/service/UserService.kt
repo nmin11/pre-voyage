@@ -33,4 +33,11 @@ class UserService(
             .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
         user.role = newRole
     }
+
+    @Transactional
+    fun chargePoint(userId: Int, points: Int) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
+        user.points += points
+    }
 }

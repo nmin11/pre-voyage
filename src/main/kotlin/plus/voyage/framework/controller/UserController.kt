@@ -30,4 +30,13 @@ class UserController(
         userService.updateUserRole(id, userRole)
         return "redirect:/admin"
     }
+
+    @PostMapping("/{id}/points")
+    fun chargePoint(
+        @PathVariable id: Int,
+        points: Int
+    ): String {
+        userService.chargePoint(id, points)
+        return "redirect:/admin"
+    }
 }

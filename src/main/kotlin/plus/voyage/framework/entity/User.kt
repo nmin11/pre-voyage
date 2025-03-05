@@ -19,6 +19,9 @@ class User(
     @Enumerated(EnumType.STRING)
     var role: Role = Role.USER
 
+    @Column(nullable = false)
+    var points: Int = 5000
+
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     var boards: MutableList<Board> = mutableListOf()
 
