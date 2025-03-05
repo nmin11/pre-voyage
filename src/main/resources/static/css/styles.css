@@ -43,3 +43,24 @@ table, td {
 .navbar-link:hover {
   text-decoration: underline;
 }
+
+.coffee-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.coffee-card {
+    border: 1px solid #ddd;
+    padding: 12px;
+    width: 200px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.coffee-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
