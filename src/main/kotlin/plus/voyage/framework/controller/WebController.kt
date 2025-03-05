@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
+import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.UserService
@@ -51,5 +52,11 @@ class WebController(
         val users = userService.getAll()
         model.addAttribute("users", users)
         return "admin/index"
+    }
+
+    @GetMapping("/admin/coffee/new")
+    fun adminNewCoffeeMenuPage(model: Model): String {
+        model.addAttribute("newCoffeeForm", CoffeeCreateRequest())
+        return "admin/coffee/new"
     }
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Pre Voyage - Add a Coffee Menu</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2>커피 메뉴 추가</h2>
+
+<form th:action="@{/coffee}" th:object="${newCoffeeForm}" method="post">
+  <label>
+    Name: <input type="text" name="name" required>
+  </label>
+  <br>
+  <label>
+    Price: <input type="number" name="price" required>
+  </label>
+  <br>
+  <label>
+    Image URL: <input type="text" name="imageUrl" id="imageUrl" oninput="updatePreview()" required>
+  </label>
+  <br>
+  <img id="imagePreview" src="" alt="이미지 미리보기" style="max-width: 300px; display: none;">
+  <br>
+  <button type="submit">추가</button>
+</form>
+
+<br>
+
+<a href="/admin/coffee/new">관리자 페이지로 돌아가기</a>
+
+<script src="../../js/preview-coffee-image.js"></script>
+</body>
+</html>
