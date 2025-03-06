@@ -42,10 +42,13 @@ class SecurityConfig(
                     "/login",
                     "/register",
                     "/users/login",
-                    "/users/signup"
+                    "/users/signup",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**"
                 ).permitAll()
                 it.requestMatchers("/admin/**").hasRole("ADMIN")
-                it.anyRequest().permitAll()
+                it.anyRequest().authenticated()
             }
             .formLogin {
                 it.loginPage("/login")
@@ -61,7 +64,9 @@ class SecurityConfig(
             .httpBasic(Customizer.withDefaults())
             .oauth2ResourceServer { it.jwt {  } }
             .exceptionHandling {
-                it.authenticationEntryPoint(BearerTokenAuthenticationEntryPoint())
+                it.authenticationEntryPoint { _, response, _ ->
+                    response.sendRedirect("/login")
+                }
                 it.accessDeniedHandler(BearerTokenAccessDeniedHandler())
             }
 
