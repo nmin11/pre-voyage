@@ -9,9 +9,13 @@ import com.nimbusds.jose.proc.SecurityContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
+import org.springframework.context.annotation.Profile
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.ProviderManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
@@ -19,14 +23,14 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler
 import org.springframework.security.web.SecurityFilterChain
-import plus.voyage.framework.repository.UserRepository
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
-    val userRepository: UserRepository
+@Profile("api")
+class SecurityConfigApi(
+    private val userDetailService: UserDetailsService
 ) {
     @Value("\${jwt.public.key}")
     lateinit var publicKey: RSAPublicKey
@@ -35,42 +39,26 @@ class SecurityConfig(
     lateinit var privateKey: RSAPrivateKey
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChainApi(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(
-                    "/login",
-                    "/register",
-                    "/users/login",
-                    "/users/signup",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**"
-                ).permitAll()
-                it.requestMatchers("/admin/**").hasRole("ADMIN")
-                it.anyRequest().authenticated()
+                it.anyRequest().permitAll()
             }
-            .formLogin {
-                it.loginPage("/login")
-                it.loginProcessingUrl("/users/login")
-                it.defaultSuccessUrl("/boards")
-                it.failureUrl("/login?error=true")
-            }
-            .logout {
-                it.logoutUrl("/logout")
-                it.logoutSuccessUrl("/login?logout=true")
-            }
-            .headers { header -> header.frameOptions { frame -> frame.sameOrigin() } }
-            .httpBasic(Customizer.withDefaults())
-            .oauth2ResourceServer { it.jwt {  } }
+            .oauth2ResourceServer { it.jwt { } }
             .exceptionHandling {
-                it.authenticationEntryPoint { _, response, _ ->
-                    response.sendRedirect("/login")
-                }
+                it.authenticationEntryPoint(BearerTokenAuthenticationEntryPoint())
                 it.accessDeniedHandler(BearerTokenAccessDeniedHandler())
             }
 
         return http.build()
+    }
+
+    @Bean
+    fun authenticationManager(): AuthenticationManager {
+        return ProviderManager(listOf(DaoAuthenticationProvider().apply {
+            setUserDetailsService(userDetailService)
+            setPasswordEncoder(passwordEncoder())
+        }))
     }
 
     @Bean

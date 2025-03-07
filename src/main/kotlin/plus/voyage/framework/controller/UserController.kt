@@ -1,20 +1,35 @@
 package plus.voyage.framework.controller
 
+import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import plus.voyage.framework.dto.LoginRequest
 import plus.voyage.framework.dto.SignupRequest
+import plus.voyage.framework.dto.LoginResponse
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.UserService
 
 @Controller
 @RequestMapping("/users")
+@Profile("api")
 class UserController(
     private val userService: UserService
 ) {
+    @PostMapping("/login")
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<LoginResponse> {
+        val response = userService.login(request)
+        val headers = HttpHeaders().apply {
+            set(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
+        }
+
+        return ResponseEntity
+            .accepted()
+            .headers(headers)
+            .body(response)
+    }
+
     @PostMapping("/signup")
     fun signup(@ModelAttribute request: SignupRequest): String {
         userService.signup(request)

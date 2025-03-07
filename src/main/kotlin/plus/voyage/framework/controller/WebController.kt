@@ -1,5 +1,6 @@
 package plus.voyage.framework.controller
 
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +13,7 @@ import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.UserService
 
 @Controller
+@Profile("thymeleaf")
 class WebController(
     private val userService: UserService,
     private val boardService: BoardService
