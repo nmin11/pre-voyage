@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.LoginRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.dto.LoginResponse
+import plus.voyage.framework.dto.SignupResponse
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.entity.User
 import plus.voyage.framework.repository.UserRepository
@@ -24,14 +25,20 @@ class UserService(
     private val jwtEncoder: JwtEncoder,
     private val passwordEncoder: PasswordEncoder
 ) {
-    fun signup(request: SignupRequest) {
+    fun signup(request: SignupRequest): SignupResponse {
         val hashedPassword = passwordEncoder.encode(request.password)
-        val user = User(
+        val user = userRepository.save(User(
             username = request.username,
             password = hashedPassword
-        )
+        ))
 
-        userRepository.save(user)
+        return SignupResponse(
+            userId = user.id ?: throw IllegalStateException("존재하지 않는 사용자입니다."),
+            username = user.username,
+            role = user.role,
+            points = user.points,
+            message = "회원가입에 성공했습니다."
+        )
     }
 
     fun login(request: LoginRequest): LoginResponse {

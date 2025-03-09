@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.dto.CoffeeCreateRequest
@@ -27,6 +29,12 @@ class WebController(
     fun register(model: Model): String {
         model.addAttribute("registerForm", SignupRequest())
         return "register"
+    }
+
+    @PostMapping("/users/signup")
+    fun signup(@ModelAttribute request: SignupRequest): String {
+        userService.signup(request)
+        return "redirect:/login"
     }
 
     @GetMapping("/boards/create")
