@@ -22,7 +22,6 @@ class UserController(
         val headers = HttpHeaders().apply {
             set(HttpHeaders.AUTHORIZATION, "Bearer ${response.accessToken}")
         }
-
         return ResponseEntity
             .accepted()
             .headers(headers)
@@ -56,9 +55,9 @@ class UserController(
     @PostMapping("/{id}/points")
     fun chargePoint(
         @PathVariable id: Int,
-        points: Int
-    ): String {
-        userService.chargePoint(id, points)
-        return "redirect:/admin"
+        @RequestBody request: UserPointChargeRequest
+    ): ResponseEntity<UserPointChargeResponse> {
+        val response = userService.chargePoint(id, request.points)
+        return ResponseEntity.ok(response)
     }
 }

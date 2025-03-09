@@ -74,10 +74,17 @@ class UserService(
     }
 
     @Transactional
-    fun chargePoint(userId: Int, points: Int) {
+    fun chargePoint(userId: Int, points: Int): UserPointChargeResponse {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
         user.points += points
+
+        return UserPointChargeResponse(
+            userId,
+            username = user.username,
+            chargedPoints = points,
+            totalPoints = user.points
+        )
     }
 
     private fun generateToken(user: UserDetails): String {

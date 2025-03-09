@@ -45,6 +45,15 @@ class WebController(
         return "redirect:/admin"
     }
 
+    @PostMapping("/users/{id}/points")
+    fun chargeUserPoint(
+        @PathVariable id: Int,
+        points: Int
+    ): String {
+        userService.chargePoint(id, points)
+        return "redirect:/admin"
+    }
+
     @GetMapping("/boards/create")
     fun createBoard(model: Model): String {
         model.addAttribute("boardForm", BoardCreateRequest())
