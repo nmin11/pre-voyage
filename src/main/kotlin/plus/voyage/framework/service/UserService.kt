@@ -62,10 +62,15 @@ class UserService(
     }
 
     @Transactional
-    fun updateUserRole(userId: Int, newRole: Role) {
+    fun updateUserRole(userId: Int, newRole: Role): UserRoleUpdateResponse {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
         user.role = newRole
+
+        return UserRoleUpdateResponse(
+            userId = userId,
+            role = newRole
+        )
     }
 
     @Transactional

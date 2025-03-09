@@ -3,14 +3,12 @@ package plus.voyage.framework.controller
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.*
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
+import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.UserService
 
@@ -35,6 +33,16 @@ class WebController(
     fun signup(@ModelAttribute request: SignupRequest): String {
         userService.signup(request)
         return "redirect:/login"
+    }
+
+    @PatchMapping("/users/{id}/role")
+    fun updateUserRole(
+        @PathVariable id: Int,
+        role: String
+    ): String {
+        val userRole = Role.valueOf(role)
+        userService.updateUserRole(id, userRole)
+        return "redirect:/admin"
     }
 
     @GetMapping("/boards/create")

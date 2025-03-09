@@ -46,11 +46,11 @@ class UserController(
     @PatchMapping("/{id}/role")
     fun updateRole(
         @PathVariable id: Int,
-        role: String
-    ): String {
-        val userRole = Role.valueOf(role)
-        userService.updateUserRole(id, userRole)
-        return "redirect:/admin"
+        @RequestBody request: UserRoleUpdateRequest
+    ): ResponseEntity<UserRoleUpdateResponse> {
+        val userRole = Role.valueOf(request.role)
+        val response = userService.updateUserRole(id, userRole)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/{id}/points")
