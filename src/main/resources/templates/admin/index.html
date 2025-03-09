@@ -12,6 +12,8 @@
 
 <h2>사용자 관리</h2>
 
+<p>사용자 수: <span th:text="${users.totalCounts}"></span></p>
+
 <table>
   <thead>
   <tr>
@@ -23,12 +25,12 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="user : ${users}">
-    <td th:text="${user.id}"></td>
+  <tr th:each="user : ${users.users}">
+    <td th:text="${user.userId}"></td>
     <td th:text="${user.username}"></td>
 
     <td>
-      <form th:action="@{/users/{id}/role(id=${user.id})}" method="post">
+      <form th:action="@{/users/{id}/role(id=${user.userId})}" method="post">
         <input type="hidden" name="_method" value="patch">
         <label>
           <select name="role">
@@ -41,7 +43,7 @@
     </td>
     <td th:text="${user.points}"></td>
     <td>
-      <form th:action="@{/users/{id}/points(id=${user.id})}" method="post">
+      <form th:action="@{/users/{id}/points(id=${user.userId})}" method="post">
         <label>
           <input type="number" name="points" min="1" required>
         </label>

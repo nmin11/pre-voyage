@@ -9,10 +9,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Service
-import plus.voyage.framework.dto.LoginRequest
-import plus.voyage.framework.dto.SignupRequest
-import plus.voyage.framework.dto.LoginResponse
-import plus.voyage.framework.dto.SignupResponse
+import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.entity.User
 import plus.voyage.framework.repository.UserRepository
@@ -54,8 +51,14 @@ class UserService(
         )
     }
 
-    fun getAll(): List<User> {
-        return userRepository.findAll()
+    fun getAll(): UserListResponse {
+        val users = userRepository.findAll()
+            .map { UserResponse.from(it) }
+
+        return UserListResponse(
+            totalCounts = users.size,
+            users
+        )
     }
 
     @Transactional

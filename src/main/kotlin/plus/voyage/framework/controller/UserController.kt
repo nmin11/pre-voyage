@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import plus.voyage.framework.dto.LoginRequest
-import plus.voyage.framework.dto.SignupRequest
-import plus.voyage.framework.dto.LoginResponse
-import plus.voyage.framework.dto.SignupResponse
+import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.UserService
 
@@ -38,6 +35,12 @@ class UserController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response)
+    }
+
+    @GetMapping
+    fun getAll(): ResponseEntity<UserListResponse> {
+        val response = userService.getAll()
+        return ResponseEntity.ok(response)
     }
 
     @PatchMapping("/{id}/role")
