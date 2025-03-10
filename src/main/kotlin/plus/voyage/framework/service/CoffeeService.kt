@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.CoffeeItem
 import plus.voyage.framework.dto.CoffeeListResponse
+import plus.voyage.framework.dto.CoffeeOrderResponse
 import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.entity.Order
 import plus.voyage.framework.entity.User
@@ -55,16 +56,17 @@ class CoffeeService(
     }
 
     @Transactional
-    fun orderCoffee(coffeeId: Int) {
+    fun orderCoffee(coffeeId: Int): CoffeeOrderResponse {
         val username = SecurityContextHolder.getContext().authentication.name
         val user: User = userRepository.findByUsername(username)
             ?: throw IllegalStateException("사용자 $username 을(를) 찾을 수 없습니다.")
         val coffee: Coffee = coffeeRepository.findById(coffeeId).orElseThrow {
             IllegalArgumentException("$coffeeId 번 커피 메뉴를 찾을 수 없습니다.")
         }
+        val order = orderRepository.save(
+            Order(coffee, user)
+        )
 
-        val order = Order(coffee, user)
-
-        orderRepository.save(order)
+        return CoffeeOrderResponse.from(order)
     }
 }

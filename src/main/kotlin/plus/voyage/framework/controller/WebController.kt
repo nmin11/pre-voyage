@@ -173,4 +173,10 @@ class WebController(
         model.addAttribute("coffeeList", coffeeList)
         return "coffee/weekly-popular"
     }
+
+    @PostMapping("/coffee/{id}/order")
+    fun orderCoffee(@PathVariable id: Int): String {
+        coffeeService.orderCoffee(id)
+        return "redirect:/coffee"
+    }
 }

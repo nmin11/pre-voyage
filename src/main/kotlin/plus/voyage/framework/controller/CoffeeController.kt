@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.CoffeeItem
 import plus.voyage.framework.dto.CoffeeListResponse
+import plus.voyage.framework.dto.CoffeeOrderResponse
 import plus.voyage.framework.service.CoffeeService
 
 @Controller
@@ -41,8 +42,10 @@ class CoffeeController(
     }
 
     @PostMapping("/{id}/order")
-    fun orderCoffee(@PathVariable id: Int): String {
-        coffeeService.orderCoffee(id)
-        return "redirect:/coffee"
+    fun orderCoffee(@PathVariable id: Int): ResponseEntity<CoffeeOrderResponse> {
+        val response = coffeeService.orderCoffee(id)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(response)
     }
 }
