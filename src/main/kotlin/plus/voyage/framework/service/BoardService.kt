@@ -17,7 +17,7 @@ class BoardService(
     private val userRepository: UserRepository
 ) {
     @Transactional
-    fun create(request: BoardCreateRequest): BoardCreateResponse {
+    fun create(request: BoardCreateRequest): BoardItem {
         val username = SecurityContextHolder.getContext().authentication.name
         val user: User = userRepository.findByUsername(username)
             ?: throw IllegalStateException("사용자 $username 을(를) 찾을 수 없습니다.")
@@ -30,14 +30,7 @@ class BoardService(
             )
         )
 
-        return BoardCreateResponse(
-            boardId = board.id ?: throw IllegalStateException("존재하지 않는 게시글입니다."),
-            title = board.title,
-            username,
-            content = board.content,
-            createdAt = board.createdAt,
-            updatedAt = board.updatedAt
-        )
+        return BoardItem.from(board, username)
     }
 
     fun getAll(): BoardListResponse {

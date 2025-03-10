@@ -23,7 +23,7 @@ class BoardController(
     private val commentService: CommentService
 ) {
     @PostMapping
-    fun create(@RequestBody request: BoardCreateRequest): ResponseEntity<BoardCreateResponse> {
+    fun create(@RequestBody request: BoardCreateRequest): ResponseEntity<BoardItem> {
         val response = boardService.create(request)
         return ResponseEntity
             .status(HttpStatus.CREATED)
