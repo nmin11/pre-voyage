@@ -53,9 +53,11 @@ class BoardController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Int): String {
+    fun delete(@PathVariable id: Int): ResponseEntity<SimpleMessageResponse> {
         boardService.delete(id)
-        return "redirect:/boards"
+        return ResponseEntity.ok(
+            SimpleMessageResponse("$id 번 게시글이 정상적으로 삭제되었습니다.")
+        )
     }
 
     @PostMapping("/{id}/comments")
