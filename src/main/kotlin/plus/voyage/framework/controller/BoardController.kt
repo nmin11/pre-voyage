@@ -62,7 +62,7 @@ class BoardController(
     @PostMapping("/{id}/comments")
     fun createComment(
         @PathVariable id: Int,
-        @RequestBody request: CommentCreateRequest
+        @RequestBody request: CommentRequest
     ): ResponseEntity<CommentItem> {
         val response = commentService.create(id, request.content)
         return ResponseEntity
@@ -74,10 +74,10 @@ class BoardController(
     fun updateComment(
         @PathVariable boardId: Int,
         @PathVariable commentId: Int,
-        content: String
-    ): String {
-        commentService.update(boardId, commentId, content)
-        return "redirect:/boards/$boardId"
+        @RequestBody request: CommentRequest
+    ): ResponseEntity<CommentItem> {
+        val response = commentService.update(boardId, commentId, request.content)
+        return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{boardId}/comments/{commentId}")

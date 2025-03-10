@@ -35,7 +35,7 @@ class CommentService(
     }
 
     @Transactional
-    fun update(boardId: Int, commentId: Int, content: String) {
+    fun update(boardId: Int, commentId: Int, content: String): CommentItem {
         val username = SecurityContextHolder.getContext().authentication.name
         val comment: Comment = commentRepository.findById(commentId).orElseThrow {
             throw NoSuchElementException("$commentId 번 댓글을 찾을 수 없습니다.")
@@ -43,15 +43,14 @@ class CommentService(
         if (username != comment.user.username) {
             throw AccessDeniedException("댓글 수정 권한이 없습니다.")
         }
-        val board: Board = boardRepository.findById(boardId).orElseThrow {
-            throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
-        }
-        if (comment.board != board) {
+        if (boardId != comment.board.id) {
             throw IllegalArgumentException("게시글과 댓글의 ID 가 일치하지 않습니다.")
         }
 
         comment.content = content
         comment.updatedAt = LocalDateTime.now()
+
+        return CommentItem.from(comment, username)
     }
 
     @Transactional

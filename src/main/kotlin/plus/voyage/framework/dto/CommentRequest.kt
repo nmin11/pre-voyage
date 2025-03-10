@@ -1,5 +1,5 @@
 package plus.voyage.framework.dto
 
-data class CommentCreateRequest(
+data class CommentRequest(
     val content: String
 )

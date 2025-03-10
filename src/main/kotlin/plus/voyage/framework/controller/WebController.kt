@@ -120,6 +120,16 @@ class WebController(
         return "redirect:/boards/$id"
     }
 
+    @PutMapping("/boards/{boardId}/comments/{commentId}")
+    fun updateComment(
+        @PathVariable boardId: Int,
+        @PathVariable commentId: Int,
+        content: String
+    ): String {
+        commentService.update(boardId, commentId, content)
+        return "redirect:/boards/$boardId"
+    }
+
     @GetMapping("/admin")
     fun adminPageWithUserList(model: Model): String {
         val users = userService.getAll()
