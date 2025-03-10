@@ -21,7 +21,6 @@ class BoardService(
         val username = SecurityContextHolder.getContext().authentication.name
         val user: User = userRepository.findByUsername(username)
             ?: throw IllegalStateException("사용자 $username 을(를) 찾을 수 없습니다.")
-
         val board = boardRepository.save(
             Board(
                 title = request.title,
