@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.CoffeeCreateRequest
-import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.service.CoffeeService
 
 @Controller

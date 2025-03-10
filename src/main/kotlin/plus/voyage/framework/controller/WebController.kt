@@ -19,12 +19,12 @@ class WebController(
     private val boardService: BoardService
 ) {
     @GetMapping("/login")
-    fun login(): String {
+    fun getLoginPage(): String {
         return "login"
     }
 
     @GetMapping("/register")
-    fun register(model: Model): String {
+    fun getRegisterPage(model: Model): String {
         model.addAttribute("registerForm", SignupRequest())
         return "register"
     }
@@ -55,9 +55,15 @@ class WebController(
     }
 
     @GetMapping("/boards/create")
-    fun createBoard(model: Model): String {
+    fun getCreateBoardPage(model: Model): String {
         model.addAttribute("boardForm", BoardCreateRequest())
         return "boards/create"
+    }
+
+    @PostMapping("/boards")
+    fun createBoard(@ModelAttribute request: BoardCreateRequest): String {
+        boardService.create(request)
+        return "redirect:/boards"
     }
 
     @GetMapping("/boards/update/{id}")

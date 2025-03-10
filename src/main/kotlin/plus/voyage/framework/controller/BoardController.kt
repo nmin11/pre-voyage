@@ -1,5 +1,8 @@
 package plus.voyage.framework.controller
 
+import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -8,22 +11,27 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.BoardCreateRequest
+import plus.voyage.framework.dto.BoardCreateResponse
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CommentService
 
 @Controller
+@Profile("api")
 @RequestMapping("/boards")
 class BoardController(
     private val boardService: BoardService,
     private val commentService: CommentService
 ) {
     @PostMapping
-    fun create(@ModelAttribute request: BoardCreateRequest): String {
-        boardService.create(request)
-        return "redirect:/boards"
+    fun create(@RequestBody request: BoardCreateRequest): ResponseEntity<BoardCreateResponse> {
+        val response = boardService.create(request)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(response)
     }
 
     @GetMapping

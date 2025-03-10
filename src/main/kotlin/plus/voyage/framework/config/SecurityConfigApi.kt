@@ -15,6 +15,7 @@ import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -42,9 +43,14 @@ class SecurityConfigApi(
     fun securityFilterChainApi(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
             .authorizeHttpRequests {
-                it.anyRequest().permitAll()
+                it.requestMatchers(
+                    "/users/login",
+                    "/users/signup"
+                ).permitAll()
+                it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt { } }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling {
                 it.authenticationEntryPoint(BearerTokenAuthenticationEntryPoint())
                 it.accessDeniedHandler(BearerTokenAccessDeniedHandler())

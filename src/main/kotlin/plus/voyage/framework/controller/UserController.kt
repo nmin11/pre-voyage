@@ -11,8 +11,8 @@ import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.UserService
 
 @Controller
-@RequestMapping("/users")
 @Profile("api")
+@RequestMapping("/users")
 class UserController(
     private val userService: UserService
 ) {

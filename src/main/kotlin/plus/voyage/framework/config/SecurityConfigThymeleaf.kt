@@ -49,6 +49,13 @@ class SecurityConfigThymeleaf(
                     "/js/**",
                     "/images/**"
                 ).permitAll()
+                it.requestMatchers(
+                    "/boards/**",
+                    "/coffee/**"
+                ).hasAnyRole(
+                    "USER",
+                    "ADMIN"
+                )
                 it.requestMatchers("/admin/**").hasRole("ADMIN")
                 it.anyRequest().authenticated()
             }
