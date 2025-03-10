@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.CoffeeCreateRequest
+import plus.voyage.framework.dto.CoffeeItem
 import plus.voyage.framework.dto.CoffeeListResponse
 import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.entity.Order
@@ -21,18 +22,21 @@ class CoffeeService(
     private val userRepository: UserRepository
 ) {
     @Transactional
-    fun create(request: CoffeeCreateRequest) {
-        val coffee = Coffee(
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl
+    fun create(request: CoffeeCreateRequest): CoffeeItem {
+        val coffee = coffeeRepository.save(
+            Coffee(
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl
+            )
         )
 
-        coffeeRepository.save(coffee)
+        return CoffeeItem.from(coffee)
     }
 
     fun getAll(): CoffeeListResponse {
         val coffeeList = coffeeRepository.findAll()
+            .map { CoffeeItem.from(it) }
 
         return CoffeeListResponse(
             totalCounts = coffeeList.size,

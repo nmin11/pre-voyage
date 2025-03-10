@@ -10,6 +10,7 @@ import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.BoardService
+import plus.voyage.framework.service.CoffeeService
 import plus.voyage.framework.service.CommentService
 import plus.voyage.framework.service.UserService
 
@@ -17,6 +18,7 @@ import plus.voyage.framework.service.UserService
 @Profile("thymeleaf")
 class WebController(
     private val boardService: BoardService,
+    private val coffeeService: CoffeeService,
     private val commentService: CommentService,
     private val userService: UserService
 ) {
@@ -150,5 +152,11 @@ class WebController(
     fun adminNewCoffeeMenuPage(model: Model): String {
         model.addAttribute("newCoffeeForm", CoffeeCreateRequest())
         return "admin/coffee/new"
+    }
+
+    @PostMapping("/coffee")
+    fun newCoffeeMenu(@ModelAttribute request: CoffeeCreateRequest): String {
+        coffeeService.create(request)
+        return "redirect:/admin"
     }
 }
