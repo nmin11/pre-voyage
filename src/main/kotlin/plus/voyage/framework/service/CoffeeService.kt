@@ -44,9 +44,14 @@ class CoffeeService(
         )
     }
 
-    fun getWeeklyPopularCoffee(): List<Coffee> {
+    fun getWeeklyPopularCoffee(): CoffeeListResponse {
         val targetDay = LocalDateTime.now().minusDays(7)
-        return orderRepository.findPopularCoffeeSince(targetDay, PageRequest.of(0, 3))
+        val coffeeList = orderRepository.findPopularCoffeeSince(targetDay, PageRequest.of(0, 3))
+
+        return CoffeeListResponse(
+            totalCounts = coffeeList.size,
+            coffeeList = coffeeList.map { CoffeeItem.from(it) }
+        )
     }
 
     @Transactional

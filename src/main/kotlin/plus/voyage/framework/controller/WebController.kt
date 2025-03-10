@@ -166,4 +166,11 @@ class WebController(
         model.addAttribute("coffeeList", coffeeListResponse)
         return "coffee/index"
     }
+
+    @GetMapping("/coffee/weekly-popular")
+    fun getWeeklyPopularCoffee(model: Model): String {
+        val coffeeList = coffeeService.getWeeklyPopularCoffee()
+        model.addAttribute("coffeeList", coffeeList)
+        return "coffee/weekly-popular"
+    }
 }
