@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -13,10 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import plus.voyage.framework.dto.BoardCreateRequest
-import plus.voyage.framework.dto.BoardCreateResponse
-import plus.voyage.framework.dto.BoardListResponse
-import plus.voyage.framework.dto.BoardUpdateRequest
+import plus.voyage.framework.dto.*
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CommentService
 
@@ -42,10 +38,9 @@ class BoardController(
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Int, model: Model): String {
-        val board = boardService.getById(id)
-        model.addAttribute("board", board)
-        return "boards/detail"
+    fun getById(@PathVariable id: Int): ResponseEntity<BoardDetailResponse> {
+        val response = boardService.getById(id)
+        return ResponseEntity.ok(response)
     }
 
     @PutMapping("/{id}")

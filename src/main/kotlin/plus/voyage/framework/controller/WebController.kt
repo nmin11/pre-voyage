@@ -73,6 +73,13 @@ class WebController(
         return "boards/index"
     }
 
+    @GetMapping("/boards/{id}")
+    fun getById(@PathVariable id: Int, model: Model): String {
+        val board = boardService.getById(id)
+        model.addAttribute("board", board)
+        return "boards/detail"
+    }
+
     @GetMapping("/boards/update/{id}")
     fun updateBoard(
         @PathVariable id: Int,
