@@ -53,7 +53,7 @@ class UserService(
 
     fun getAll(): UserListResponse {
         val users = userRepository.findAll()
-            .map { UserResponse.from(it) }
+            .map { UserItem.from(it) }
 
         return UserListResponse(
             totalCounts = users.size,

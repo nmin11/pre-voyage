@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="../css/styles.css" />
   <title>Pre Voyage - Board Detail</title>
 </head>
@@ -19,7 +20,7 @@
 <br>
 
 <th:block th:if="${board.isAuthor}">
-  <a th:href="@{/boards/{id}/edit(id=${board.boardId})}">
+  <a th:href="@{/boards/update/{id}(id=${board.boardId})}">
     <button>수정하기</button>
   </a>
 

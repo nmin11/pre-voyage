@@ -46,10 +46,10 @@ class BoardController(
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Int,
-        @ModelAttribute request: BoardUpdateRequest
-    ): String {
-        boardService.update(id, request)
-        return "redirect:/boards/$id"
+        @RequestBody request: BoardUpdateRequest
+    ): ResponseEntity<BoardDetailResponse> {
+        val response = boardService.update(id, request)
+        return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{id}")

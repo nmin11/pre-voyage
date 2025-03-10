@@ -81,7 +81,7 @@ class WebController(
     }
 
     @GetMapping("/boards/update/{id}")
-    fun updateBoard(
+    fun getUpdateBoardPage(
         @PathVariable id: Int,
         model: Model
     ): String {
@@ -92,6 +92,15 @@ class WebController(
             BoardUpdateRequest(board.title, board.content)
         )
         return "boards/update"
+    }
+
+    @PutMapping("/boards/{id}")
+    fun updateBoard(
+        @PathVariable id: Int,
+        @ModelAttribute request: BoardUpdateRequest
+    ): String {
+        boardService.update(id, request)
+        return "redirect:/boards/$id"
     }
 
     @GetMapping("/admin")

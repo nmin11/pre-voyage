@@ -41,8 +41,9 @@ class BoardService(
     }
 
     fun getAll(): BoardListResponse {
+        val username = SecurityContextHolder.getContext().authentication.name
         val boards = boardRepository.findAll()
-            .map { BoardResponse.from(it) }
+            .map { BoardDetailResponse.from(it, username) }
 
         return BoardListResponse(
             totalCounts = boards.size,
@@ -55,31 +56,12 @@ class BoardService(
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
-        val comments = board.comments.map {
-            CommentListResponse(
-                commentId = it.id ?: throw IllegalStateException("존재하지 않는 댓글입니다."),
-                username = it.user.username,
-                content = it.content,
-                createdAt = it.createdAt,
-                updatedAt = it.updatedAt,
-                isAuthor = username == it.user.username
-            )
-        }
 
-        return BoardDetailResponse(
-            boardId,
-            username = board.user.username,
-            title = board.title,
-            content = board.content,
-            createdAt = board.createdAt,
-            updatedAt = board.updatedAt,
-            isAuthor = username == board.user.username,
-            comments
-        )
+        return BoardDetailResponse.from(board, username)
     }
 
     @Transactional
-    fun update(boardId: Int, request: BoardUpdateRequest) {
+    fun update(boardId: Int, request: BoardUpdateRequest): BoardDetailResponse {
         val username = SecurityContextHolder.getContext().authentication.name
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
@@ -91,6 +73,8 @@ class BoardService(
         board.title = request.title
         board.content = request.content
         board.updatedAt = LocalDateTime.now()
+
+        return BoardDetailResponse.from(board, username)
     }
 
     @Transactional
