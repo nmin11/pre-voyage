@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -38,7 +37,7 @@ class BoardController(
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Int): ResponseEntity<BoardDetailResponse> {
+    fun getById(@PathVariable id: Int): ResponseEntity<BoardItem> {
         val response = boardService.getById(id)
         return ResponseEntity.ok(response)
     }
@@ -47,7 +46,7 @@ class BoardController(
     fun update(
         @PathVariable id: Int,
         @RequestBody request: BoardUpdateRequest
-    ): ResponseEntity<BoardDetailResponse> {
+    ): ResponseEntity<BoardItem> {
         val response = boardService.update(id, request)
         return ResponseEntity.ok(response)
     }
@@ -63,10 +62,12 @@ class BoardController(
     @PostMapping("/{id}/comments")
     fun createComment(
         @PathVariable id: Int,
-        content: String
-    ): String {
-        commentService.create(id, content)
-        return "redirect:/boards/$id"
+        @RequestBody request: CommentCreateRequest
+    ): ResponseEntity<CommentItem> {
+        val response = commentService.create(id, request.content)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(response)
     }
 
     @PutMapping("/{boardId}/comments/{commentId}")

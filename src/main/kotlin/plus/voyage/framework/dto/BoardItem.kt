@@ -3,7 +3,7 @@ package plus.voyage.framework.dto
 import plus.voyage.framework.entity.Board
 import java.time.LocalDateTime
 
-data class BoardDetailResponse(
+data class BoardItem(
     val boardId: Int,
     val username: String,
     val title: String,
@@ -14,8 +14,8 @@ data class BoardDetailResponse(
     val comments: List<CommentItem>
 ) {
     companion object {
-        fun from(board: Board, username: String): BoardDetailResponse {
-            return BoardDetailResponse(
+        fun from(board: Board, username: String): BoardItem {
+            return BoardItem(
                 boardId = board.id ?: throw IllegalStateException("존재하지 않는 게시글입니다."),
                 username = board.user.username,
                 title = board.title,

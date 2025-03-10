@@ -10,13 +10,15 @@ import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.service.BoardService
+import plus.voyage.framework.service.CommentService
 import plus.voyage.framework.service.UserService
 
 @Controller
 @Profile("thymeleaf")
 class WebController(
-    private val userService: UserService,
-    private val boardService: BoardService
+    private val boardService: BoardService,
+    private val commentService: CommentService,
+    private val userService: UserService
 ) {
     @GetMapping("/login")
     fun getLoginPage(): String {
@@ -107,6 +109,15 @@ class WebController(
     fun deleteBoard(@PathVariable id: Int): String {
         boardService.delete(id)
         return "redirect:/boards"
+    }
+
+    @PostMapping("/boards/{id}/comments")
+    fun createComment(
+        @PathVariable id: Int,
+        content: String
+    ): String {
+        commentService.create(id, content)
+        return "redirect:/boards/$id"
     }
 
     @GetMapping("/admin")

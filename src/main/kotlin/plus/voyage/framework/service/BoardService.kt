@@ -43,7 +43,7 @@ class BoardService(
     fun getAll(): BoardListResponse {
         val username = SecurityContextHolder.getContext().authentication.name
         val boards = boardRepository.findAll()
-            .map { BoardDetailResponse.from(it, username) }
+            .map { BoardItem.from(it, username) }
 
         return BoardListResponse(
             totalCounts = boards.size,
@@ -51,17 +51,17 @@ class BoardService(
         )
     }
 
-    fun getById(boardId: Int): BoardDetailResponse {
+    fun getById(boardId: Int): BoardItem {
         val username = SecurityContextHolder.getContext().authentication.name
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
 
-        return BoardDetailResponse.from(board, username)
+        return BoardItem.from(board, username)
     }
 
     @Transactional
-    fun update(boardId: Int, request: BoardUpdateRequest): BoardDetailResponse {
+    fun update(boardId: Int, request: BoardUpdateRequest): BoardItem {
         val username = SecurityContextHolder.getContext().authentication.name
         val board: Board = boardRepository.findById(boardId).orElseThrow {
             throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
@@ -74,7 +74,7 @@ class BoardService(
         board.content = request.content
         board.updatedAt = LocalDateTime.now()
 
-        return BoardDetailResponse.from(board, username)
+        return BoardItem.from(board, username)
     }
 
     @Transactional
