@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.CoffeeItem
+import plus.voyage.framework.dto.CoffeeListResponse
 import plus.voyage.framework.service.CoffeeService
 
 @Controller
@@ -29,10 +30,9 @@ class CoffeeController(
     }
 
     @GetMapping
-    fun getAll(model: Model): String {
-        val coffeeListResponse = coffeeService.getAll()
-        model.addAttribute("coffeeList", coffeeListResponse)
-        return "coffee/index"
+    fun getAll(): ResponseEntity<CoffeeListResponse> {
+        val response = coffeeService.getAll()
+        return ResponseEntity.ok(response)
     }
 
     @GetMapping("/weekly-popular")

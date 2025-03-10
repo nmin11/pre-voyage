@@ -159,4 +159,11 @@ class WebController(
         coffeeService.create(request)
         return "redirect:/admin"
     }
+
+    @GetMapping("/coffee")
+    fun getCoffeeMenuPage(model: Model): String {
+        val coffeeListResponse = coffeeService.getAll()
+        model.addAttribute("coffeeList", coffeeListResponse)
+        return "coffee/index"
+    }
 }
