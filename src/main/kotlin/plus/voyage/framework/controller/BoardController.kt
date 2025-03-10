@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardCreateResponse
+import plus.voyage.framework.dto.BoardListResponse
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CommentService
@@ -35,10 +36,9 @@ class BoardController(
     }
 
     @GetMapping
-    fun getAll(model: Model): String {
-        val boardListResponse = boardService.getAll()
-        model.addAttribute("boards", boardListResponse)
-        return "boards/index"
+    fun getAll(): ResponseEntity<BoardListResponse> {
+        val response = boardService.getAll()
+        return ResponseEntity.ok(response)
     }
 
     @GetMapping("/{id}")

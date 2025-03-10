@@ -66,6 +66,13 @@ class WebController(
         return "redirect:/boards"
     }
 
+    @GetMapping("/boards")
+    fun getAllBoard(model: Model): String {
+        val boardListResponse = boardService.getAll()
+        model.addAttribute("boards", boardListResponse)
+        return "boards/index"
+    }
+
     @GetMapping("/boards/update/{id}")
     fun updateBoard(
         @PathVariable id: Int,

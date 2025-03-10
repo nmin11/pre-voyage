@@ -8,5 +8,5 @@ data class CommentListResponse(
     val content: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val isAuthor: Boolean
+    val isAuthor: Boolean?
 )
