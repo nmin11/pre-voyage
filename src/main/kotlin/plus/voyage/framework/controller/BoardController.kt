@@ -84,8 +84,10 @@ class BoardController(
     fun deleteComment(
         @PathVariable boardId: Int,
         @PathVariable commentId: Int
-    ): String {
+    ): ResponseEntity<SimpleMessageResponse> {
         commentService.delete(commentId)
-        return "redirect:/boards/$boardId"
+        return ResponseEntity.ok(
+            SimpleMessageResponse("$boardId 번 게시글의 $commentId 댓글이 정상적으로 삭제되었습니다.")
+        )
     }
 }

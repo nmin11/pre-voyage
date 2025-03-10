@@ -130,6 +130,15 @@ class WebController(
         return "redirect:/boards/$boardId"
     }
 
+    @DeleteMapping("/boards/{boardId}/comments/{commentId}")
+    fun deleteComment(
+        @PathVariable boardId: Int,
+        @PathVariable commentId: Int
+    ): String {
+        commentService.delete(commentId)
+        return "redirect:/boards/$boardId"
+    }
+
     @GetMapping("/admin")
     fun adminPageWithUserList(model: Model): String {
         val users = userService.getAll()
