@@ -17,6 +17,13 @@ class GlobalExceptionHandler {
             .body(errors)
     }
 
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<SimpleMessageResponse> {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(SimpleMessageResponse(ex.message ?: "잘못된 요청입니다."))
+    }
+
     @ExceptionHandler(ResourceNotFoundException::class)
     fun handleUserNotFoundException(ex: ResourceNotFoundException): ResponseEntity<SimpleMessageResponse> {
         return ResponseEntity
