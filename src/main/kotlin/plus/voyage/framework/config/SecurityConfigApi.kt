@@ -10,20 +10,26 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.core.convert.converter.Converter
+import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.util.matcher.RegexRequestMatcher
+import plus.voyage.framework.exception.JwtAccessDeniedHandler
+import plus.voyage.framework.exception.JwtAuthenticationEntryPoint
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
@@ -31,6 +37,8 @@ import java.security.interfaces.RSAPublicKey
 @EnableWebSecurity
 @Profile("api")
 class SecurityConfigApi(
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val userDetailService: UserDetailsService
 ) {
     @Value("\${jwt.public.key}")
@@ -47,13 +55,16 @@ class SecurityConfigApi(
                     "/users/login",
                     "/users/signup"
                 ).permitAll()
+                it.requestMatchers(
+                    RegexRequestMatcher("^/users/\\d+/role$", "PATCH")
+                ).hasAuthority("ROLE_ADMIN")
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { it.jwt { } }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling {
-                it.authenticationEntryPoint(BearerTokenAuthenticationEntryPoint())
-                it.accessDeniedHandler(BearerTokenAccessDeniedHandler())
+                it.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                it.accessDeniedHandler(jwtAccessDeniedHandler)
             }
 
         return http.build()
@@ -77,6 +88,17 @@ class SecurityConfigApi(
         val jwk: JWK = RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build()
         val jwkSet: JWKSource<SecurityContext> = ImmutableJWKSet(JWKSet(jwk))
         return NimbusJwtEncoder(jwkSet)
+    }
+
+    @Bean
+    fun jwtAuthenticationConverter(): Converter<Jwt, AbstractAuthenticationToken> {
+        return JwtAuthenticationConverter().apply {
+            setJwtGrantedAuthoritiesConverter { jwt: Jwt ->
+                val roles = jwt.getClaimAsStringList("roles") ?: listOf()
+                println("✅ JWT Roles from token: $roles")
+                roles.map { SimpleGrantedAuthority(it) }
+            }
+        }
     }
 
     @Bean

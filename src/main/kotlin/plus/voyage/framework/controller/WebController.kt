@@ -12,6 +12,7 @@ import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.exception.DuplicateUsernameException
+import plus.voyage.framework.exception.InvalidRoleException
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CoffeeService
 import plus.voyage.framework.service.CommentService
@@ -64,8 +65,12 @@ class WebController(
         @PathVariable id: Int,
         role: String
     ): String {
-        val userRole = Role.valueOf(role)
-        userService.updateUserRole(id, userRole)
+        val newRole = try {
+            Role.valueOf(role.uppercase())
+        } catch (ex: IllegalArgumentException) {
+            throw InvalidRoleException()
+        }
+        userService.updateUserRole(id, newRole)
         return "redirect:/admin"
     }
 

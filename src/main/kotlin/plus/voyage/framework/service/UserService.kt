@@ -2,7 +2,9 @@ package plus.voyage.framework.service
 
 import jakarta.transaction.Transactional
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtClaimsSet
@@ -13,6 +15,7 @@ import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.entity.User
 import plus.voyage.framework.exception.DuplicateUsernameException
+import plus.voyage.framework.exception.UserNotFoundException
 import plus.voyage.framework.repository.UserRepository
 import java.time.Instant
 
@@ -68,7 +71,7 @@ class UserService(
     @Transactional
     fun updateUserRole(userId: Int, newRole: Role): UserRoleUpdateResponse {
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
+            .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
         user.role = newRole
 
         return UserRoleUpdateResponse(
@@ -80,7 +83,7 @@ class UserService(
     @Transactional
     fun chargePoint(userId: Int, points: Int): UserPointChargeResponse {
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("$userId 번 사용자를 찾을 수 없습니다.") }
+            .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
         user.points += points
 
         return UserPointChargeResponse(
@@ -89,6 +92,12 @@ class UserService(
             chargedPoints = points,
             totalPoints = user.points
         )
+    }
+
+    fun getCurrentUser(): User {
+        val username = SecurityContextHolder.getContext().authentication.name
+        return userRepository.findByUsername(username)
+            ?: throw BadCredentialsException("유효하지 않은 사용자 정보입니다.")
     }
 
     private fun generateToken(user: UserDetails): String {

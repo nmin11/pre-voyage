@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
+import plus.voyage.framework.exception.InvalidRoleException
 import plus.voyage.framework.service.UserService
 
 @Controller
@@ -48,8 +49,12 @@ class UserController(
         @PathVariable id: Int,
         @RequestBody request: UserRoleUpdateRequest
     ): ResponseEntity<UserRoleUpdateResponse> {
-        val userRole = Role.valueOf(request.role)
-        val response = userService.updateUserRole(id, userRole)
+        val newRole = try {
+            Role.valueOf(request.role.uppercase())
+        } catch (ex: IllegalArgumentException) {
+            throw InvalidRoleException()
+        }
+        val response = userService.updateUserRole(id, newRole)
         return ResponseEntity.ok(response)
     }
 
