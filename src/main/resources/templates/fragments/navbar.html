@@ -11,6 +11,7 @@
       <span class="navbar-user">
         <strong sec:authentication="name"></strong>
       </span>
+      <span th:if="${userPoints != null}">포인트: <strong th:text="${userPoints}"></strong></span>
 
       <a sec:authorize="hasRole('ADMIN')" href="/admin" class="navbar-link">
         Admin 페이지

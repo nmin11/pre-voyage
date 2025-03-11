@@ -44,4 +44,11 @@ class GlobalExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(mapOf("role" to ex.message))
     }
+
+    @ExceptionHandler(InsufficientPointsException::class)
+    fun handleInsufficientPointsException(ex: InsufficientPointsException): ResponseEntity<SimpleMessageResponse> {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(SimpleMessageResponse(ex.message ?: "보유 포인트가 부족합니다."))
+    }
 }

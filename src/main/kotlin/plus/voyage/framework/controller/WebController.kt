@@ -2,15 +2,18 @@ package plus.voyage.framework.controller
 
 import jakarta.validation.Valid
 import org.springframework.context.annotation.Profile
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import plus.voyage.framework.dto.BoardRequest
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.exception.DuplicateUsernameException
+import plus.voyage.framework.exception.InsufficientPointsException
 import plus.voyage.framework.exception.InvalidRoleException
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CoffeeService
@@ -25,6 +28,17 @@ class WebController(
     private val commentService: CommentService,
     private val userService: UserService
 ) {
+    @ModelAttribute("userPoints")
+    fun addUserPoints(model: Model) {
+        val authentication = SecurityContextHolder.getContext().authentication
+        if (authentication != null && authentication.isAuthenticated && authentication.name != "anonymousUser") {
+            val currentUser = userService.getCurrentUser()
+            model.addAttribute("userPoints", currentUser.points)
+        } else {
+            model.addAttribute("userPoints", null)
+        }
+    }
+
     @GetMapping("/login")
     fun getLoginPage(): String {
         return "login"
@@ -199,8 +213,19 @@ class WebController(
     }
 
     @PostMapping("/coffee/{id}/order")
-    fun orderCoffee(@PathVariable id: Int): String {
-        coffeeService.orderCoffee(id)
-        return "redirect:/coffee"
+    fun orderCoffee(
+        @PathVariable id: Int,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        return try {
+            coffeeService.orderCoffee(id)
+            "redirect:/coffee"
+        } catch (ex: InsufficientPointsException) {
+            redirectAttributes.addFlashAttribute(
+                "error",
+                ex.message ?: "보유 포인트가 부족합니다."
+            )
+            "redirect:/coffee"
+        }
     }
 }

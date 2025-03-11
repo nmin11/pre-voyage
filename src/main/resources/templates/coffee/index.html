@@ -13,6 +13,8 @@
 <h2>커피 메뉴</h2>
 <p>총 <span th:text="${coffeeList.totalCounts}"></span> 개의 메뉴가 있습니다.</p>
 
+<p th:if="${error}" class="error" th:text="${error}"></p>
+
 <div class="coffee-container">
   <div class="coffee-card" th:each="coffee : ${coffeeList.coffeeList}">
     <img th:src="${coffee.imageUrl}" alt="커피 이미지">

@@ -7,3 +7,5 @@ class UserNotFoundException(message: String) : ResourceNotFoundException(message
 class BoardNotFoundException(message: String) : ResourceNotFoundException(message)
 
 class CommentNotFoundException(message: String) : ResourceNotFoundException(message)
+
+class CoffeeNotFoundException(message: String) : ResourceNotFoundException(message)

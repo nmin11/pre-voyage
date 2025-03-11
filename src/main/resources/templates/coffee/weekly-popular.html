@@ -12,6 +12,8 @@
 
 <h2>주간 TOP 3 커피</h2>
 
+<p th:if="${error}" class="error" th:text="${error}"></p>
+
 <div class="coffee-container">
   <div class="coffee-card" th:each="coffee : ${coffeeList.coffeeList}">
     <img th:src="${coffee.imageUrl}" alt="커피 이미지">

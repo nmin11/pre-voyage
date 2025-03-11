@@ -9,6 +9,8 @@ import plus.voyage.framework.dto.CoffeeListResponse
 import plus.voyage.framework.dto.CoffeeOrderResponse
 import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.entity.Order
+import plus.voyage.framework.exception.CoffeeNotFoundException
+import plus.voyage.framework.exception.InsufficientPointsException
 import plus.voyage.framework.repository.CoffeeRepository
 import plus.voyage.framework.repository.OrderRepository
 import java.time.LocalDateTime
@@ -54,10 +56,16 @@ class CoffeeService(
 
     @Transactional
     fun orderCoffee(coffeeId: Int): CoffeeOrderResponse {
-        val currentUser = userService.getCurrentUser()
-        val coffee: Coffee = coffeeRepository.findById(coffeeId).orElseThrow {
-            IllegalArgumentException("$coffeeId 번 커피 메뉴를 찾을 수 없습니다.")
+        val coffee = coffeeRepository.findById(coffeeId).orElseThrow {
+            CoffeeNotFoundException("$coffeeId 번 커피 메뉴를 찾을 수 없습니다.")
         }
+        val currentUser = userService.getCurrentUser()
+        if (currentUser.points - coffee.price < 0) {
+            throw InsufficientPointsException()
+        }
+
+        currentUser.points -= coffee.price
+
         val order = orderRepository.save(
             Order(coffee, currentUser)
         )
