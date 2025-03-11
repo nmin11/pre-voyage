@@ -161,7 +161,7 @@ class WebController(
         @PathVariable boardId: Int,
         @PathVariable commentId: Int
     ): String {
-        commentService.delete(commentId)
+        commentService.delete(boardId, commentId)
         return "redirect:/boards/$boardId"
     }
 

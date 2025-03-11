@@ -2,11 +2,10 @@ package plus.voyage.framework.service
 
 import jakarta.transaction.Transactional
 import org.springframework.security.access.AccessDeniedException
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.CommentItem
 import plus.voyage.framework.entity.Comment
-import plus.voyage.framework.exception.BoardNotFoundException
+import plus.voyage.framework.entity.Role
 import plus.voyage.framework.exception.CommentNotFoundException
 import plus.voyage.framework.repository.CommentRepository
 import java.time.LocalDateTime
@@ -46,7 +45,16 @@ class CommentService(
     }
 
     @Transactional
-    fun delete(commentId: Int) {
+    fun delete(boardId: Int, commentId: Int) {
+        val comment = findById(commentId)
+        if (boardId != comment.board.id) {
+            throw IllegalArgumentException("게시글과 댓글의 ID 가 일치하지 않습니다.")
+        }
+        val currentUser = userService.getCurrentUser()
+        if (currentUser.username != comment.user.username && currentUser.role != Role.ADMIN) {
+            throw AccessDeniedException("댓글 삭제 권한이 없습니다.")
+        }
+
         commentRepository.deleteById(commentId)
     }
 
