@@ -6,30 +6,27 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Board
-import plus.voyage.framework.entity.User
+import plus.voyage.framework.exception.BoardNotFoundException
 import plus.voyage.framework.repository.BoardRepository
-import plus.voyage.framework.repository.UserRepository
 import java.time.LocalDateTime
 
 @Service
 class BoardService(
     private val boardRepository: BoardRepository,
-    private val userRepository: UserRepository
+    private val userService: UserService
 ) {
     @Transactional
     fun create(request: BoardCreateRequest): BoardItem {
-        val username = SecurityContextHolder.getContext().authentication.name
-        val user: User = userRepository.findByUsername(username)
-            ?: throw IllegalStateException("사용자 $username 을(를) 찾을 수 없습니다.")
+        val currentUser = userService.getCurrentUser()
         val board = boardRepository.save(
             Board(
                 title = request.title,
                 content = request.content,
-                user
+                currentUser
             )
         )
 
-        return BoardItem.from(board, username)
+        return BoardItem.from(board, currentUser.username)
     }
 
     fun getAll(): BoardListResponse {
@@ -46,7 +43,7 @@ class BoardService(
     fun getById(boardId: Int): BoardItem {
         val username = SecurityContextHolder.getContext().authentication.name
         val board: Board = boardRepository.findById(boardId).orElseThrow {
-            throw NoSuchElementException("$boardId 번 게시글을 찾을 수 없습니다.")
+            throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
 
         return BoardItem.from(board, username)

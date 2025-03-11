@@ -2,7 +2,6 @@ package plus.voyage.framework.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -18,11 +17,11 @@ class GlobalExceptionHandler {
             .body(errors)
     }
 
-    @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<SimpleMessageResponse> {
+    @ExceptionHandler(ResourceNotFoundException::class)
+    fun handleUserNotFoundException(ex: ResourceNotFoundException): ResponseEntity<SimpleMessageResponse> {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .body(SimpleMessageResponse(ex.message))
+            .body(SimpleMessageResponse(ex.message ?: "존재하지 않는 리소스입니다."))
     }
 
     @ExceptionHandler(DuplicateUsernameException::class)
