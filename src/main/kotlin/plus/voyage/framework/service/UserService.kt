@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.entity.User
+import plus.voyage.framework.exception.DuplicateUsernameException
 import plus.voyage.framework.repository.UserRepository
 import java.time.Instant
 
@@ -23,6 +24,9 @@ class UserService(
     private val passwordEncoder: PasswordEncoder
 ) {
     fun signup(request: SignupRequest): SignupResponse {
+        if (userRepository.existsByUsername(request.username)) {
+            throw DuplicateUsernameException("중복된 username 입니다.")
+        }
         val hashedPassword = passwordEncoder.encode(request.password)
         val user = userRepository.save(User(
             username = request.username,

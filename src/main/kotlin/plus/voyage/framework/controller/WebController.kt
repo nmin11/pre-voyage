@@ -1,14 +1,17 @@
 package plus.voyage.framework.controller
 
+import jakarta.validation.Valid
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import plus.voyage.framework.dto.BoardCreateRequest
 import plus.voyage.framework.dto.BoardUpdateRequest
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
+import plus.voyage.framework.exception.DuplicateUsernameException
 import plus.voyage.framework.service.BoardService
 import plus.voyage.framework.service.CoffeeService
 import plus.voyage.framework.service.CommentService
@@ -34,8 +37,25 @@ class WebController(
     }
 
     @PostMapping("/users/signup")
-    fun signup(@ModelAttribute request: SignupRequest): String {
-        userService.signup(request)
+    fun signup(
+        @Valid @ModelAttribute("registerForm")
+        request: SignupRequest,
+        bindingResult: BindingResult
+    ): String {
+        if (bindingResult.hasErrors()) {
+            return "register"
+        }
+
+        try {
+            userService.signup(request)
+        } catch (ex: DuplicateUsernameException) {
+            bindingResult.rejectValue(
+                "username",
+                "error.username",
+                ex.message ?: "중복된 username 입니다."
+            )
+            return "register"
+        }
         return "redirect:/login"
     }
 

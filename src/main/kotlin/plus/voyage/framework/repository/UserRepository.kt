@@ -5,4 +5,5 @@ import plus.voyage.framework.entity.User
 
 interface UserRepository : JpaRepository<User, Int> {
     fun findByUsername(username: String): User?
+    fun existsByUsername(username: String): Boolean
 }

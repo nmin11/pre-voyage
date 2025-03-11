@@ -1,5 +1,6 @@
 package plus.voyage.framework.controller
 
+import jakarta.validation.Valid
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -29,7 +30,7 @@ class UserController(
     }
 
     @PostMapping("/signup")
-    fun signup(@RequestBody request: SignupRequest): ResponseEntity<SignupResponse> {
+    fun signup(@Valid @RequestBody request: SignupRequest): ResponseEntity<SignupResponse> {
         val response = userService.signup(request)
         return ResponseEntity
             .status(HttpStatus.CREATED)
