@@ -55,7 +55,7 @@ class BoardService(
             throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
         }
         val currentUser = userService.getCurrentUser()
-        if (currentUser.username != board.user.username && currentUser.role != Role.ADMIN) {
+        if (currentUser.username != board.user.username) {
             throw AccessDeniedException("게시글 수정 권한이 없습니다.")
         }
 

@@ -23,7 +23,9 @@
   <a th:href="@{/boards/update/{id}(id=${board.boardId})}">
     <button>수정하기</button>
   </a>
+</th:block>
 
+<th:block th:if="${board.isAuthor} or ${#authorization.expression('hasRole(''ADMIN'')')}">
   <form th:action="@{/boards/{id}(id=${board.boardId})}" method="post"
         onsubmit="return confirm('정말 삭제하시겠습니까?');">
     <input type="hidden" name="_method" value="delete">
@@ -67,7 +69,9 @@
           <button type="submit">저장</button>
           <button type="button" th:attr="onclick='cancelEdit(' + ${comment.commentId} + ')'">취소</button>
         </form>
+      </th:block>
 
+      <th:block th:if="${comment.isAuthor} or ${#authorization.expression('hasRole(''ADMIN'')')}">
         <form th:action="@{/boards/{boardId}/comments/{commentId}(boardId=${board.boardId}, commentId=${comment.commentId})}"
               method="post"
               onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
