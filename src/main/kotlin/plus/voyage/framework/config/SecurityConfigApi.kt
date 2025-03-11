@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RegexRequestMatcher
 import plus.voyage.framework.exception.JwtAccessDeniedHandler
 import plus.voyage.framework.exception.JwtAuthenticationEntryPoint
@@ -57,7 +58,8 @@ class SecurityConfigApi(
                 ).permitAll()
                 it.requestMatchers(
                     RegexRequestMatcher("^/users/\\d+/role$", "PATCH"),
-                    RegexRequestMatcher("^/users/\\d+/points$", "POST")
+                    RegexRequestMatcher("^/users/\\d+/points$", "POST"),
+                    AntPathRequestMatcher("/coffee", "POST")
                 ).hasAuthority("ROLE_ADMIN")
                 it.anyRequest().authenticated()
             }

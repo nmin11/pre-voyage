@@ -1,5 +1,6 @@
 package plus.voyage.framework.controller
 
+import jakarta.validation.Valid
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,7 +23,7 @@ class CoffeeController(
     private val coffeeService: CoffeeService
 ) {
     @PostMapping
-    fun create(@RequestBody request: CoffeeCreateRequest): ResponseEntity<CoffeeItem> {
+    fun create(@Valid @RequestBody request: CoffeeCreateRequest): ResponseEntity<CoffeeItem> {
         val response = coffeeService.create(request)
         return ResponseEntity
             .status(HttpStatus.CREATED)
