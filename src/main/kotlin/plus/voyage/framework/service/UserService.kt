@@ -70,8 +70,7 @@ class UserService(
 
     @Transactional
     fun updateUserRole(userId: Int, newRole: Role): UserRoleUpdateResponse {
-        val user = userRepository.findById(userId)
-            .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
+        val user = getById(userId)
         user.role = newRole
 
         return UserRoleUpdateResponse(
@@ -82,8 +81,7 @@ class UserService(
 
     @Transactional
     fun chargePoint(userId: Int, points: Int): UserPointChargeResponse {
-        val user = userRepository.findById(userId)
-            .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
+        val user = getById(userId)
         user.points += points
 
         return UserPointChargeResponse(
@@ -98,6 +96,11 @@ class UserService(
         val username = SecurityContextHolder.getContext().authentication.name
         return userRepository.findByUsername(username)
             ?: throw BadCredentialsException("유효하지 않은 사용자 정보입니다.")
+    }
+
+    private fun getById(userId: Int): User {
+        return userRepository.findById(userId)
+            .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
     }
 
     private fun generateToken(user: UserDetails): String {
