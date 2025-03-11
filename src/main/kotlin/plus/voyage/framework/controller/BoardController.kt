@@ -1,5 +1,6 @@
 package plus.voyage.framework.controller
 
+import jakarta.validation.Valid
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,7 +24,7 @@ class BoardController(
     private val commentService: CommentService
 ) {
     @PostMapping
-    fun create(@RequestBody request: BoardCreateRequest): ResponseEntity<BoardItem> {
+    fun create(@Valid @RequestBody request: BoardCreateRequest): ResponseEntity<BoardItem> {
         val response = boardService.create(request)
         return ResponseEntity
             .status(HttpStatus.CREATED)
