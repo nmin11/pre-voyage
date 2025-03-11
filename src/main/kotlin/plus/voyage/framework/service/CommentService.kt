@@ -5,33 +5,25 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import plus.voyage.framework.dto.CommentItem
-import plus.voyage.framework.entity.Board
 import plus.voyage.framework.entity.Comment
-import plus.voyage.framework.entity.User
-import plus.voyage.framework.repository.BoardRepository
 import plus.voyage.framework.repository.CommentRepository
-import plus.voyage.framework.repository.UserRepository
 import java.time.LocalDateTime
 
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
-    private val boardRepository: BoardRepository,
-    private val userRepository: UserRepository
+    private val boardService: BoardService,
+    private val userService: UserService
 ) {
     @Transactional
     fun create(boardId: Int, content: String): CommentItem {
-        val username = SecurityContextHolder.getContext().authentication.name
-        val user: User = userRepository.findByUsername(username)
-            ?: throw IllegalStateException("사용자 $username 을(를) 찾을 수 없습니다.")
-        val board: Board = boardRepository.findById(boardId).orElseThrow {
-            IllegalArgumentException("$boardId 번 게시글을 찾을 수 없습니다.")
-        }
+        val currentUser = userService.getCurrentUser()
+        val board = boardService.findById(boardId)
         val comment = commentRepository.save(
-            Comment(content, board, user)
+            Comment(content, board, currentUser)
         )
 
-        return CommentItem.from(comment, username)
+        return CommentItem.from(comment, currentUser.username)
     }
 
     @Transactional

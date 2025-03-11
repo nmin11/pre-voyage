@@ -42,18 +42,14 @@ class BoardService(
 
     fun getById(boardId: Int): BoardItem {
         val currentUser = userService.getCurrentUser()
-        val board: Board = boardRepository.findById(boardId).orElseThrow {
-            throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
-        }
+        val board = findById(boardId)
 
         return BoardItem.from(board, currentUser.username)
     }
 
     @Transactional
     fun update(boardId: Int, request: BoardRequest): BoardItem {
-        val board: Board = boardRepository.findById(boardId).orElseThrow {
-            throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
-        }
+        val board = findById(boardId)
         val currentUser = userService.getCurrentUser()
         if (currentUser.username != board.user.username) {
             throw AccessDeniedException("게시글 수정 권한이 없습니다.")
@@ -68,14 +64,18 @@ class BoardService(
 
     @Transactional
     fun delete(boardId: Int) {
-        val board: Board = boardRepository.findById(boardId).orElseThrow {
-            throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
-        }
+        val board = findById(boardId)
         val currentUser = userService.getCurrentUser()
         if (currentUser.username != board.user.username && currentUser.role != Role.ADMIN) {
             throw AccessDeniedException("게시글 삭제 권한이 없습니다.")
         }
 
         boardRepository.deleteById(boardId)
+    }
+
+    fun findById(boardId: Int): Board {
+        return boardRepository.findById(boardId).orElseThrow {
+            throw BoardNotFoundException("$boardId 번 게시글을 찾을 수 없습니다.")
+        }
     }
 }

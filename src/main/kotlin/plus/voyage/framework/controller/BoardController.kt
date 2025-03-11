@@ -63,7 +63,7 @@ class BoardController(
     @PostMapping("/{id}/comments")
     fun createComment(
         @PathVariable id: Int,
-        @RequestBody request: CommentRequest
+        @Valid @RequestBody request: CommentRequest
     ): ResponseEntity<CommentItem> {
         val response = commentService.create(id, request.content)
         return ResponseEntity

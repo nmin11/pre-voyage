@@ -70,7 +70,7 @@ class UserService(
 
     @Transactional
     fun updateUserRole(userId: Int, newRole: Role): UserRoleUpdateResponse {
-        val user = getById(userId)
+        val user = findById(userId)
         user.role = newRole
 
         return UserRoleUpdateResponse(
@@ -81,7 +81,7 @@ class UserService(
 
     @Transactional
     fun chargePoint(userId: Int, points: Int): UserPointChargeResponse {
-        val user = getById(userId)
+        val user = findById(userId)
         user.points += points
 
         return UserPointChargeResponse(
@@ -98,7 +98,7 @@ class UserService(
             ?: throw BadCredentialsException("유효하지 않은 사용자 정보입니다.")
     }
 
-    private fun getById(userId: Int): User {
+    private fun findById(userId: Int): User {
         return userRepository.findById(userId)
             .orElseThrow { UserNotFoundException("$userId 번 사용자를 찾을 수 없습니다.") }
     }
