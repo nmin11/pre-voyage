@@ -2,7 +2,7 @@ package plus.voyage.framework.dto
 
 import jakarta.validation.constraints.NotBlank
 
-data class BoardCreateRequest(
+data class BoardRequest(
     @field:NotBlank(message = "title 을 입력해주세요.")
     val title: String = "",
 

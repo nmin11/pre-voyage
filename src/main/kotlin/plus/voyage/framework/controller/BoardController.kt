@@ -24,7 +24,7 @@ class BoardController(
     private val commentService: CommentService
 ) {
     @PostMapping
-    fun create(@Valid @RequestBody request: BoardCreateRequest): ResponseEntity<BoardItem> {
+    fun create(@Valid @RequestBody request: BoardRequest): ResponseEntity<BoardItem> {
         val response = boardService.create(request)
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -46,7 +46,7 @@ class BoardController(
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Int,
-        @RequestBody request: BoardUpdateRequest
+        @Valid @RequestBody request: BoardRequest
     ): ResponseEntity<BoardItem> {
         val response = boardService.update(id, request)
         return ResponseEntity.ok(response)

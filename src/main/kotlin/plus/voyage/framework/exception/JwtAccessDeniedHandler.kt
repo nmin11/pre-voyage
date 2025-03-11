@@ -20,7 +20,7 @@ class JwtAccessDeniedHandler(
         response.contentType = "application/json"
         response.characterEncoding = "UTF-8"
         response.status = HttpServletResponse.SC_FORBIDDEN
-        val errorResponse = SimpleMessageResponse("권한이 없습니다.")
+        val errorResponse = SimpleMessageResponse(accessDeniedException.message ?: "권한이 없습니다.")
         response.writer.write(objectMapper.writeValueAsString(errorResponse))
     }
 }

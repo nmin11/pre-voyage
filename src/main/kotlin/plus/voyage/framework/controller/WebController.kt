@@ -6,8 +6,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
-import plus.voyage.framework.dto.BoardCreateRequest
-import plus.voyage.framework.dto.BoardUpdateRequest
+import plus.voyage.framework.dto.BoardRequest
 import plus.voyage.framework.dto.CoffeeCreateRequest
 import plus.voyage.framework.dto.SignupRequest
 import plus.voyage.framework.entity.Role
@@ -85,12 +84,12 @@ class WebController(
 
     @GetMapping("/boards/create")
     fun getCreateBoardPage(model: Model): String {
-        model.addAttribute("boardForm", BoardCreateRequest())
+        model.addAttribute("boardForm", BoardRequest())
         return "boards/create"
     }
 
     @PostMapping("/boards")
-    fun createBoard(@ModelAttribute request: BoardCreateRequest): String {
+    fun createBoard(@ModelAttribute request: BoardRequest): String {
         boardService.create(request)
         return "redirect:/boards"
     }
@@ -118,7 +117,7 @@ class WebController(
         model.addAttribute("boardId", id)
         model.addAttribute(
             "boardForm",
-            BoardUpdateRequest(board.title, board.content)
+            BoardRequest(board.title, board.content)
         )
         return "boards/update"
     }
@@ -126,7 +125,7 @@ class WebController(
     @PutMapping("/boards/{id}")
     fun updateBoard(
         @PathVariable id: Int,
-        @ModelAttribute request: BoardUpdateRequest
+        @ModelAttribute request: BoardRequest
     ): String {
         boardService.update(id, request)
         return "redirect:/boards/$id"
