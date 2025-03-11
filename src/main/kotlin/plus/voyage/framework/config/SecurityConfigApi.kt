@@ -56,7 +56,8 @@ class SecurityConfigApi(
                     "/users/signup"
                 ).permitAll()
                 it.requestMatchers(
-                    RegexRequestMatcher("^/users/\\d+/role$", "PATCH")
+                    RegexRequestMatcher("^/users/\\d+/role$", "PATCH"),
+                    RegexRequestMatcher("^/users/\\d+/points$", "POST")
                 ).hasAuthority("ROLE_ADMIN")
                 it.anyRequest().authenticated()
             }
