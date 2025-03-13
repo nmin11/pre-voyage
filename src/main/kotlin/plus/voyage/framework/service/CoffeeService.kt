@@ -1,16 +1,19 @@
 package plus.voyage.framework.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.MediaType
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import plus.voyage.framework.dto.CoffeeCreateRequest
-import plus.voyage.framework.dto.CoffeeItem
-import plus.voyage.framework.dto.CoffeeListResponse
-import plus.voyage.framework.dto.CoffeeOrderResponse
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientException
+import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Coffee
 import plus.voyage.framework.entity.Order
 import plus.voyage.framework.exception.CoffeeNotFoundException
 import plus.voyage.framework.exception.InsufficientPointsException
+import plus.voyage.framework.exception.UserNotFoundException
 import plus.voyage.framework.repository.CoffeeRepository
 import plus.voyage.framework.repository.OrderRepository
 import java.time.LocalDateTime
@@ -19,8 +22,12 @@ import java.time.LocalDateTime
 class CoffeeService(
     private val coffeeRepository: CoffeeRepository,
     private val orderRepository: OrderRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val objectMapper: ObjectMapper,
+    private val restClient: RestClient
 ) {
+    private val mockApiUrl = "https://67d27eda90e0670699bdcabf.mockapi.io/Orders"
+
     @Transactional
     fun create(request: CoffeeCreateRequest): CoffeeItem {
         val coffee = coffeeRepository.save(
@@ -70,6 +77,31 @@ class CoffeeService(
             Order(coffee, currentUser)
         )
 
+        sendOrderToMockApi(order)
+
         return CoffeeOrderResponse.from(order)
+    }
+
+    @Async
+    private fun sendOrderToMockApi(order: Order) {
+        val request = OrderMockApiRequest(
+            orderId = order.id.toString(),
+            userId = order.user.id ?: throw UserNotFoundException("사용자를 찾을 수 없습니다."),
+            coffeeId = order.coffee.id ?: throw CoffeeNotFoundException("커피 메뉴를 찾을 수 없습니다."),
+            price = order.coffee.price
+        )
+        val jsonPayload = objectMapper.writeValueAsString(request)
+
+        try {
+            val response = restClient.post()
+                .uri(mockApiUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jsonPayload)
+                .retrieve()
+                .toEntity(String::class.java)
+            println("✅ Mock API Response: ${response.statusCode}, ${response.body}")
+        } catch (ex: RestClientException) {
+            println("❌ Mock API Request Failed: ${ex.message}")
+        }
     }
 }
