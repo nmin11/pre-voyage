@@ -1,8 +1,8 @@
 package plus.voyage.framework.service
 
-import jakarta.transaction.Transactional
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import plus.voyage.framework.dto.CommentItem
 import plus.voyage.framework.entity.Comment
 import plus.voyage.framework.entity.Role
