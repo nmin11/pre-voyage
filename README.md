@@ -14,8 +14,10 @@
 - [x] 로그인 API 구현
 - [x] Admin의 회원 권한 부여 기능 구현
 - [x] 댓글 CRUD API 구현
-- [ ] Thymeleaf를 활용해서 기본적인 UI 구현
-- [ ] 커피 주문 시스템 관련 API 구현
+- [x] Thymeleaf를 활용해서 기본적인 UI 구현
+- [x] 커피 주문 시스템 관련 API 구현
+- [ ] 테스트 케이스 작성
+- [ ] AWS 배포
 
 ## Plan
 
