@@ -1,11 +1,13 @@
 package plus.voyage.framework.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import jakarta.transaction.Transactional
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
 import plus.voyage.framework.dto.*
@@ -26,7 +28,9 @@ class CoffeeService(
     private val objectMapper: ObjectMapper,
     private val restClient: RestClient
 ) {
-    private val mockApiUrl = "https://67d27eda90e0670699bdcabf.mockapi.io/Orders"
+    companion object {
+        private const val MOCK_API_URL = "https://67d27eda90e0670699bdcabf.mockapi.io/Orders"
+    }
 
     @Transactional
     fun create(request: CoffeeCreateRequest): CoffeeItem {
@@ -51,9 +55,17 @@ class CoffeeService(
         )
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(
+        value = ["coffee_popular"],
+        key = "'weekly'",
+        unless = "#result != null and #result.totalCounts == 0"
+    )
     fun getWeeklyPopularCoffee(): CoffeeListResponse {
         val targetDay = LocalDateTime.now().minusDays(7)
         val coffeeList = orderRepository.findPopularCoffeeSince(targetDay, PageRequest.of(0, 3))
+
+        println("[DB Inquiry] New weekly popular coffee menus are calculated and saved")
 
         return CoffeeListResponse(
             totalCounts = coffeeList.size,
@@ -62,6 +74,7 @@ class CoffeeService(
     }
 
     @Transactional
+    @CacheEvict(value = ["coffee_popular"], key = "'weekly'")
     fun orderCoffee(coffeeId: Int): CoffeeOrderResponse {
         val coffee = coffeeRepository.findById(coffeeId).orElseThrow {
             CoffeeNotFoundException("$coffeeId 번 커피 메뉴를 찾을 수 없습니다.")
@@ -94,7 +107,7 @@ class CoffeeService(
 
         try {
             val response = restClient.post()
-                .uri(mockApiUrl)
+                .uri(MOCK_API_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(jsonPayload)
                 .retrieve()

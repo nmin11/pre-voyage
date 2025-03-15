@@ -3,10 +3,10 @@ package plus.voyage.framework.dto
 import plus.voyage.framework.entity.Coffee
 
 data class CoffeeItem(
-    val coffeeId: Int,
-    val name: String,
-    val price: Int,
-    val imageUrl: String
+    val coffeeId: Int = 0,
+    val name: String = "",
+    val price: Int = 0,
+    val imageUrl: String = ""
 ) {
     companion object {
         fun from(coffee: Coffee): CoffeeItem {
