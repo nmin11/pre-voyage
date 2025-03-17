@@ -1,12 +1,5 @@
 package plus.voyage.framework.config
 
-import com.nimbusds.jose.jwk.JWK
-import com.nimbusds.jose.jwk.JWKSet
-import com.nimbusds.jose.jwk.RSAKey
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet
-import com.nimbusds.jose.jwk.source.JWKSource
-import com.nimbusds.jose.proc.SecurityContext
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -24,15 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RegexRequestMatcher
+import plus.voyage.framework.auth.JwtAuthenticationFilter
+import plus.voyage.framework.auth.JwtUtil
 import plus.voyage.framework.exception.JwtAccessDeniedHandler
 import plus.voyage.framework.exception.JwtAuthenticationEntryPoint
-import java.security.interfaces.RSAPrivateKey
-import java.security.interfaces.RSAPublicKey
 
 @Configuration
 @EnableWebSecurity
@@ -40,14 +33,9 @@ import java.security.interfaces.RSAPublicKey
 class SecurityConfigApi(
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val jwtUtil: JwtUtil,
     private val userDetailService: UserDetailsService
 ) {
-    @Value("\${jwt.public.key}")
-    lateinit var publicKey: RSAPublicKey
-
-    @Value("\${jwt.private.key}")
-    lateinit var privateKey: RSAPrivateKey
-
     @Bean
     fun securityFilterChainApi(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
@@ -63,6 +51,10 @@ class SecurityConfigApi(
                 ).hasAuthority("ROLE_ADMIN")
                 it.anyRequest().authenticated()
             }
+            .addFilterBefore(
+                JwtAuthenticationFilter(jwtUtil, userDetailService),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
             .oauth2ResourceServer { it.jwt { } }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling {
@@ -83,14 +75,7 @@ class SecurityConfigApi(
 
     @Bean
     fun jwtDecoder(): NimbusJwtDecoder {
-        return NimbusJwtDecoder.withPublicKey(this.publicKey).build()
-    }
-
-    @Bean
-    fun jwtEncoder(): NimbusJwtEncoder {
-        val jwk: JWK = RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build()
-        val jwkSet: JWKSource<SecurityContext> = ImmutableJWKSet(JWKSet(jwk))
-        return NimbusJwtEncoder(jwkSet)
+        return NimbusJwtDecoder.withSecretKey(jwtUtil.getSecretKey()).build()
     }
 
     @Bean

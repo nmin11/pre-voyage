@@ -24,5 +24,4 @@ spring:
       host: localhost
       port: 6379
 jwt:
-  private.key: classpath:app.key
-  public.key: classpath:app.pub
+  secret-key: cHJlX3ZveWFnZS1oYW5naGFlX3BsdXMtZnJhbWV3b3JrX3N0dWR5LWp3dA==
