@@ -50,11 +50,12 @@ class BoardServiceTest {
         every { userService.getCurrentUser() } returns mockUser // ✅ userService Mocking 추가
         every { boardRepository.findById(999) } returns Optional.empty()
 
-        // when & then
+        // when
         val exception = assertThrows<BoardNotFoundException> {
             boardService.getById(999)
         }
 
+        // then
         assertEquals("999 번 게시글을 찾을 수 없습니다.", exception.message)
         verify { boardRepository.findById(999) }
     }
@@ -74,7 +75,7 @@ class BoardServiceTest {
         // then
         assertEquals(1, response.boardId)
         assertEquals("Title", response.title)
-        assertTrue(response.isAuthor!!) // 작성자 본인 확인
+        assertTrue(response.isAuthor!!)
     }
 
     @Test
@@ -88,11 +89,12 @@ class BoardServiceTest {
         every { userService.getCurrentUser() } returns anotherUser
         every { boardRepository.findById(1) } returns Optional.of(board)
 
-        // when & then
+        // when
         val exception = assertThrows<AccessDeniedException> {
             boardService.update(1, request)
         }
 
+        // then
         assertEquals("게시글 수정 권한이 없습니다.", exception.message)
     }
 
