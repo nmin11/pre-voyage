@@ -49,7 +49,7 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유효한 username, password_회원가입 성공`() {
+    fun `회원가입 성공`() {
         // given
         val request = SignupRequest(username = "newUser", password = "ValidPass1!")
         val hashedPassword = "hashedPassword"
@@ -93,7 +93,7 @@ class UserServiceTest {
     }
 
     @Test
-    fun `올바른 username, password_로그인 성공`() {
+    fun `로그인 성공`() {
         // given
         val request = LoginRequest(username = "testUser", password = "password123")
         val user = User(username = request.username, password = "encodedPassword")
@@ -133,7 +133,7 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유효한 userId_역할 변경 성공`() {
+    fun `역할 변경 성공`() {
         // given
         val userId = 1
         val user = User(username = "testUser", password = "password123")
@@ -166,7 +166,7 @@ class UserServiceTest {
     }
 
     @Test
-    fun `유효한 userId_포인트 충전 성공`() {
+    fun `포인트 충전 성공`() {
         // given
         val userId = 1
         val pointsToCharge = 1000
