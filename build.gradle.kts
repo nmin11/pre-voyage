@@ -35,9 +35,13 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("org.xerial:sqlite-jdbc")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage")
+        exclude(group = "org.mockito")
+    }
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
