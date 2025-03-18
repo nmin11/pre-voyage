@@ -16,8 +16,8 @@
 - [x] 댓글 CRUD API 구현
 - [x] Thymeleaf를 활용해서 기본적인 UI 구현
 - [x] 커피 주문 시스템 관련 API 구현
+- [x] AWS 배포
 - [ ] 테스트 케이스 작성
-- [ ] AWS 배포
 
 ## Plan
 
