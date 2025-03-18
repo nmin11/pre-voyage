@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.springframework.security.access.AccessDeniedException
 import plus.voyage.framework.dto.BoardItem
@@ -24,14 +25,24 @@ class BoardServiceTest {
         boardRepository, userService
     )
 
+    private lateinit var user: User
+    private lateinit var admin: User
+    private lateinit var board: Board
+
+    @BeforeEach
+    fun setup() {
+        user = User(username = "testUser", password = "hashedPassword").apply { id = 1 }
+        admin = User(username = "adminUser", password = "hashedPassword").apply { role = Role.ADMIN }
+        board = Board(title = "Test Title", content = "Test Content", user = user).apply { id = 1 }
+    }
+
     @Test
     fun `게시글 생성 성공`() {
         // given
-        val currentUser = User(username = "testUser", password = "hashedPassword").apply { id = 1 }
         val request = BoardRequest(title = "New Post", content = "Content")
-        val board = Board(request.title, request.content, currentUser).apply { id = 1 }
+        val board = Board(request.title, request.content, user).apply { id = 1 }
 
-        every { userService.getCurrentUser() } returns currentUser
+        every { userService.getCurrentUser() } returns user
         every { boardRepository.save(any()) } returns board
 
         // when
@@ -46,8 +57,7 @@ class BoardServiceTest {
     @Test
     fun `존재하지 않는 게시글 ID 조회_게시글 단건 조회 실패`() {
         // given
-        val mockUser = User(username = "testUser", password = "password123")
-        every { userService.getCurrentUser() } returns mockUser // ✅ userService Mocking 추가
+        every { userService.getCurrentUser() } returns user
         every { boardRepository.findById(999) } returns Optional.empty()
 
         // when
@@ -63,10 +73,7 @@ class BoardServiceTest {
     @Test
     fun `게시글 단건 조회 성공`() {
         // given
-        val currentUser = User(username = "testUser", password = "hashedPassword").apply { id = 1 }
-        val board = Board("Title", "Content", currentUser).apply { id = 1 }
-
-        every { userService.getCurrentUser() } returns currentUser
+        every { userService.getCurrentUser() } returns user
         every { boardRepository.findById(1) } returns Optional.of(board)
 
         // when
@@ -74,16 +81,15 @@ class BoardServiceTest {
 
         // then
         assertEquals(1, response.boardId)
-        assertEquals("Title", response.title)
+        assertEquals("Test Title", response.title)
         assertTrue(response.isAuthor!!)
     }
 
     @Test
     fun `작성자가 아닌 사용자_게시글 수정 실패`() {
         // given
-        val author = User(username = "authorUser", password = "hashedPassword").apply { id = 1 }
-        val anotherUser = User(username = "otherUser", password = "hashedPassword").apply { id = 2 }
-        val board = Board("Title", "Content", author).apply { id = 1 }
+        val anotherUser = User(username = "otherUser", password = "hashedPassword").apply { id = 3 }
+        val board = Board("Title", "Content", user).apply { id = 1 }
         val request = BoardRequest(title = "Updated Title", content = "Updated Content")
 
         every { userService.getCurrentUser() } returns anotherUser
@@ -101,11 +107,9 @@ class BoardServiceTest {
     @Test
     fun `게시글 수정 성공`() {
         // given
-        val currentUser = User(username = "testUser", password = "hashedPassword").apply { id = 1 }
-        val board = Board("Old Title", "Old Content", currentUser).apply { id = 1 }
         val request = BoardRequest(title = "Updated Title", content = "Updated Content")
 
-        every { userService.getCurrentUser() } returns currentUser
+        every { userService.getCurrentUser() } returns user
         every { boardRepository.findById(1) } returns Optional.of(board)
 
         // when
@@ -120,9 +124,8 @@ class BoardServiceTest {
     @Test
     fun `작성자도 ADMIN도 아닌 사용자_게시글 삭제 실패`() {
         // given
-        val authorUser = User(username = "authorUser", password = "hashedPassword").apply { id = 1 }
-        val anotherUser = User(username = "otherUser", password = "hashedPassword").apply { id = 2 }
-        val board = Board("Title", "Content", authorUser).apply { id = 1 }
+        val anotherUser = User(username = "otherUser", password = "hashedPassword").apply { id = 3 }
+        val board = Board("Title", "Content", user).apply { id = 1 }
 
         every { userService.getCurrentUser() } returns anotherUser
         every { boardRepository.findById(1) } returns Optional.of(board)
@@ -139,10 +142,9 @@ class BoardServiceTest {
     @Test
     fun `게시글 작성자_게시글 삭제 성공`() {
         // given
-        val currentUser = User(username = "testUser", password = "hashedPassword").apply { id = 1 }
-        val board = Board("Title", "Content", currentUser).apply { id = 1 }
+        val board = Board("Title", "Content", user).apply { id = 1 }
 
-        every { userService.getCurrentUser() } returns currentUser
+        every { userService.getCurrentUser() } returns user
         every { boardRepository.findById(1) } returns Optional.of(board)
         every { boardRepository.deleteById(1) } returns Unit
 
@@ -156,11 +158,9 @@ class BoardServiceTest {
     @Test
     fun `ADMIN 사용자_게시글 삭제 성공`() {
         // given
-        val adminUser = User(username = "adminUser", password = "hashedPassword").apply { role = Role.ADMIN }
-        val authorUser = User(username = "authorUser", password = "hashedPassword").apply { id = 1 }
-        val board = Board("Title", "Content", authorUser).apply { id = 1 }
+        val board = Board("Title", "Content", user).apply { id = 1 }
 
-        every { userService.getCurrentUser() } returns adminUser
+        every { userService.getCurrentUser() } returns admin
         every { boardRepository.findById(1) } returns Optional.of(board)
         every { boardRepository.deleteById(1) } returns Unit
 
