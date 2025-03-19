@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: api
+    active: thymeleaf
   datasource:
     url: jdbc:sqlite:pre-voyage.db
     driver-class-name: org.sqlite.JDBC
