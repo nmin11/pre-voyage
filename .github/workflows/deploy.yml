@@ -19,6 +19,14 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
 
+      - name: ⚡ Gradle Cache Restore
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 🧪 Run Tests
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+
       - name: 🏗️ Gradle Build
         run: |
           chmod +x gradlew
@@ -34,7 +42,7 @@ jobs:
           target: "/home/ec2-user/app"
           strip_components: 2
 
-      - name: 🔄 Spring Boot Restart
+      - name: 🔄 Restart Spring Boot
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_HOST }}
@@ -42,3 +50,5 @@ jobs:
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
             sudo systemctl restart springboot
+            sleep 5
+            sudo systemctl status springboot --no-pager
