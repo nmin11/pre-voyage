@@ -45,3 +45,6 @@ app.pub
 
 ### Database ###
 *.db
+
+### Deployment Script
+deploy.sh
