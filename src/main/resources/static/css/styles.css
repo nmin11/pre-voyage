@@ -54,7 +54,7 @@ table, td {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: center; /* 카드 중앙 정렬 */
+    justify-content: center;
     padding: 20px;
 }
 

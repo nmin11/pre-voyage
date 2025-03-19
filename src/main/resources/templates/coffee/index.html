@@ -7,12 +7,10 @@
 </head>
 
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <h2>커피 메뉴</h2>
-<p>총 <span th:text="${coffeeList.totalCounts}"></span> 개의 메뉴가 있습니다.</p>
 
+<p>총 <span th:text="${coffeeList.totalCounts}"></span> 개의 메뉴가 있습니다.</p>
 <p th:if="${error}" class="error" th:text="${error}"></p>
 
 <div class="coffee-container">
@@ -30,6 +28,5 @@
 <br>
 
 <a href="/coffee/weekly-popular">주간 TOP 3 커피</a>
-
 </body>
 </html>

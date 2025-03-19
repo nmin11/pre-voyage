@@ -5,15 +5,13 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <title>Pre Voyage - Update a Board</title>
 </head>
+
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <h2>게시글 수정</h2>
 
 <form th:action="@{/boards/{id}(id=${boardId})}" th:object="${boardForm}" method="post">
   <input type="hidden" name="_method" value="put">
-
   <label for="title">제목:</label>
   <input type="text" id="title" name="title" th:value="*{title}" required>
   <br><br>

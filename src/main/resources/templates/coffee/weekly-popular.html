@@ -7,9 +7,7 @@
 </head>
 
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <h2>주간 TOP 3 커피</h2>
 
 <p th:if="${error}" class="error" th:text="${error}"></p>
@@ -27,6 +25,5 @@
 </div>
 
 <a href="/coffee">전체 커피 메뉴</a>
-
 </body>
 </html>

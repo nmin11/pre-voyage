@@ -7,11 +7,8 @@
 </head>
 
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <h2>사용자 관리</h2>
-
 <p>사용자 수: <span th:text="${users.totalCounts}"></span></p>
 
 <table>
@@ -57,6 +54,5 @@
 <br>
 
 <a href="/admin/coffee/new">커피 메뉴 추가</a>
-
 </body>
 </html>
