@@ -13,6 +13,7 @@ import plus.voyage.framework.dto.*
 import plus.voyage.framework.entity.Role
 import plus.voyage.framework.entity.User
 import plus.voyage.framework.exception.DuplicateUsernameException
+import plus.voyage.framework.exception.NegativePointBalanceException
 import plus.voyage.framework.exception.UserNotFoundException
 import plus.voyage.framework.repository.UserRepository
 
@@ -80,6 +81,9 @@ class UserService(
     @Transactional
     fun chargePoint(userId: Int, points: Int): UserPointChargeResponse {
         val user = findById(userId)
+        if (user.points + points < 0) {
+            throw NegativePointBalanceException()
+        }
         user.points += points
 
         return UserPointChargeResponse(

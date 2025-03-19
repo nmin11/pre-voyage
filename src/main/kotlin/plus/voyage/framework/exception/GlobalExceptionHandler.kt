@@ -45,6 +45,13 @@ class GlobalExceptionHandler {
             .body(mapOf("role" to ex.message))
     }
 
+    @ExceptionHandler(NegativePointBalanceException::class)
+    fun handleNegativePointBalanceException(ex: NegativePointBalanceException): ResponseEntity<SimpleMessageResponse> {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(SimpleMessageResponse(ex.message))
+    }
+
     @ExceptionHandler(InsufficientPointsException::class)
     fun handleInsufficientPointsException(ex: InsufficientPointsException): ResponseEntity<SimpleMessageResponse> {
         return ResponseEntity
