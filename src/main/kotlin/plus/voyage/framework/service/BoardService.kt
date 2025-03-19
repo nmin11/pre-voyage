@@ -31,7 +31,7 @@ class BoardService(
 
     fun getAll(): BoardListResponse {
         val currentUser = userService.getCurrentUser()
-        val boards = boardRepository.findAll()
+        val boards = boardRepository.findAllByOrderByCreatedAtDesc()
             .map { BoardItem.from(it, currentUser.username) }
 
         return BoardListResponse(

@@ -23,7 +23,9 @@ data class BoardItem(
                 createdAt = board.createdAt,
                 updatedAt = board.updatedAt,
                 isAuthor = username == board.user.username,
-                comments = board.comments.map { CommentItem.from(it, username) }
+                comments = board.comments
+                    .sortedByDescending { it.createdAt }
+                    .map { CommentItem.from(it, username) }
             )
         }
     }
