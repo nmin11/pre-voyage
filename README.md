@@ -84,3 +84,12 @@ GitHub Actions를 활용해 EC2로 배포
 - 4월 중 EC2 종료 예정
 
 **배포 URL: http://3.35.173.239:8080/login**
+
+# Thymeleaf / API 분리 작업에 대해
+
+과제 요건 상 UI 구현은 요구되지 않았으나,
+구현 사항들을 손쉽게 확인할 수 있도록 가벼운 Thymeleaf UI를 곁들였습니다.
+Thymeleaf 기술을 채택할 경우 REST API 방식으로 작동하기에는 어려우므로,
+`thymeleaf` 프로필과 함께 `api` 프로필을 추가 구현해서 과제 요건을 맞출 수 있도록 마련했습니다.
+
+**프로필 전환 방법: `application.yml` 파일의 `spring.profiles.actice` 부분에 'thymeleaf' 또는 'api' 입력**
