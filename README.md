@@ -60,3 +60,27 @@
 
 - 커피 주문 시스템 관련 API 구현
 - 테스트 케이스 작성
+
+# Deployment
+
+## 배포 프로세스
+
+GitHub Actions를 활용해 EC2로 배포
+
+1. 코드 체크아웃
+2. JDK 셋업
+3. Gradle 캐시 정리
+4. Gradle 테스트
+5. Gradle 빌드
+6. scp 명령어를 활용해서 빌드된 JAR 파일을 EC2로 복사
+7. EC2의 Spring 애플리케이션 재실행
+
+## 참고 사항
+
+- 로컬 환경에서도 간편하게 배포할 수 있도록 `deploy.sh` 파일 마련
+  - 스크립트는 GitHub Actions 로직과 유사
+  - 환경 변수 값들이 있으므로 git ignore 처리되어 있음
+- 간편한 웹 UI를 활용할 수 있도록 'Thymeleaf' 프로필로 배포 중
+- 4월 중 EC2 종료 예정
+
+**배포 URL: http://3.35.173.239:8080/login**
