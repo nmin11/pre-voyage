@@ -80,10 +80,6 @@ GitHub Actions를 활용해 EC2로 배포
 - 로컬 환경에서도 간편하게 배포할 수 있도록 `deploy.sh` 파일 마련
   - 스크립트는 GitHub Actions 로직과 유사
   - 환경 변수 값들이 있으므로 git ignore 처리되어 있음
-- 간편한 웹 UI를 활용할 수 있도록 'Thymeleaf' 프로필로 배포 중
-- 4월 중 EC2 종료 예정
-
-**배포 URL: http://3.35.173.239:8080/login**
 
 # Thymeleaf / API 분리 작업에 대해
 
